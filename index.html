@@ -7,6 +7,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDvaFrdTO6MS1CiQv-BNqw4CXWgg4_1-bs",
+    authDomain: "aptr-2026.firebaseapp.com",
+    projectId: "aptr-2026",
+    storageBucket: "aptr-2026.firebasestorage.app",
+    messagingSenderId: "828043902666",
+    appId: "1:828043902666:web:f33439e45fee35ae48be33"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window._fbSave = async (data) => {
+    try {
+      await setDoc(doc(db, "aptr", "main"), data);
+    } catch(e) { console.error("Firebase save error:", e); }
+  };
+
+  window._fbLoad = async () => {
+    try {
+      const snap = await getDoc(doc(db, "aptr", "main"));
+      return snap.exists() ? snap.data() : null;
+    } catch(e) { console.error("Firebase load error:", e); return null; }
+  };
+
+  window._fbReady = true;
+  window.dispatchEvent(new Event("fbReady"));
+</script>
 <style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#0f0f11;}</style>
 </head>
 <body>
@@ -835,8 +867,20 @@ function PVProjectCard({project,area,onToggleTask,onEditTask,onDeleteTask,onOpen
 
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 function APTRPlanner(){
-  const getInit=()=>{try{const s=localStorage.getItem('aptr-v13');return s?JSON.parse(s):getInitialData();}catch{return getInitialData();}};
-  const[data,setData]=useState(getInit);
+  const[data,setData]=useState(getInitialData);
+  const[fbLoaded,setFbLoaded]=useState(false);
+
+  useEffect(()=>{
+    const load=async()=>{
+      if(window._fbReady){
+        const d=await window._fbLoad();
+        if(d&&d.areas&&d.projects&&d.inbox){setData({areas:d.areas,projects:d.projects,inbox:d.inbox});}
+        setFbLoaded(true);
+      }
+    };
+    if(window._fbReady){load();}
+    else{window.addEventListener('fbReady',load,{once:true});}
+  },[]);
   const[view,setView]=useState('projects');
   const[taskFilter,setTaskFilter]=useState('all');
   const[selAreaId,setSelAreaId]=useState(null);
@@ -860,7 +904,9 @@ function APTRPlanner(){
   const[pvSheet,setPvSheet]=useState(null);
   const[editingProject,setEditingProject]=useState(null);
 
-  useEffect(()=>{localStorage.setItem('aptr-v13',JSON.stringify(data));},[data]);
+  useEffect(()=>{
+    if(fbLoaded&&window._fbSave){window._fbSave({areas:data.areas,projects:data.projects,inbox:data.inbox});}
+  },[data,fbLoaded]);
 
   const yr=2026;
   const projects=useMemo(()=>data.projects.filter(p=>p.year===yr).sort((a,b)=>new Date(a.startDate||'9999')-new Date(b.startDate||'9999')),[data.projects]);
