@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>APTR 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#0f0f11;}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const _cw=console.warn.bind(console);
+console.warn=(...a)=>{if(typeof a[0]==='string'&&a[0].includes('in-browser Babel'))return;_cw(...a);};
+window.LucideIcons={};
+(()=>{
+  const R=window.React;
+  const ic={
+    Plus:[['line',{x1:12,y1:5,x2:12,y2:19}],['line',{x1:5,y1:12,x2:19,y2:12}]],
+    Circle:[['circle',{cx:12,cy:12,r:10}]],
+    CheckCircle2:[['circle',{cx:12,cy:12,r:10}],['path',{d:'m9 12 2 2 4-4'}]],
+    Edit2:[['path',{d:'M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'}]],
+    ArrowLeft:[['path',{d:'m12 19-7-7 7-7'}],['path',{d:'M19 12H5'}]],
+    X:[['path',{d:'M18 6 6 18'}],['path',{d:'m6 6 12 12'}]],
+    Download:[['path',{d:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'}],['polyline',{points:'7 10 12 15 17 10'}],['line',{x1:12,y1:15,x2:12,y2:3}]],
+    Upload:[['path',{d:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'}],['polyline',{points:'17 8 12 3 7 8'}],['line',{x1:12,y1:3,x2:12,y2:15}]],
+    Trash2:[['path',{d:'M3 6h18'}],['path',{d:'M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6'}],['path',{d:'M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2'}],['line',{x1:10,y1:11,x2:10,y2:17}],['line',{x1:14,y1:11,x2:14,y2:17}]],
+    MoreVertical:[['circle',{cx:12,cy:5,r:1}],['circle',{cx:12,cy:12,r:1}],['circle',{cx:12,cy:19,r:1}]],
+    Calendar:[['rect',{x:3,y:4,width:18,height:18,rx:2,ry:2}],['line',{x1:16,y1:2,x2:16,y2:6}],['line',{x1:8,y1:2,x2:8,y2:6}],['line',{x1:3,y1:10,x2:21,y2:10}]],
+    Sparkles:[['path',{d:'m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'}]],
+    Inbox:[['polyline',{points:'22 12 16 12 14 15 10 15 8 12 2 12'}],['path',{d:'M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z'}]],
+    Target:[['circle',{cx:12,cy:12,r:10}],['circle',{cx:12,cy:12,r:6}],['circle',{cx:12,cy:12,r:2}]],
+    Layers:[['polygon',{points:'12 2 2 7 12 12 22 7 12 2'}],['polyline',{points:'2 17 12 22 22 17'}],['polyline',{points:'2 12 12 17 22 12'}]],
+    CheckSquare:[['polyline',{points:'9 11 12 14 22 4'}],['path',{d:'M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'}]],
+    Clock:[['circle',{cx:12,cy:12,r:10}],['polyline',{points:'12 6 12 12 16 14'}]],
+    AlertCircle:[['circle',{cx:12,cy:12,r:10}],['line',{x1:12,y1:8,x2:12,y2:12}],['line',{x1:12,y1:16,x2:12.01,y2:16}]],
+    FileText:[['path',{d:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'}],['polyline',{points:'14 2 14 8 20 8'}],['line',{x1:16,y1:13,x2:8,y2:13}],['line',{x1:16,y1:17,x2:8,y2:17}],['polyline',{points:'10 9 9 9 8 9'}]],
+    ExternalLink:[['path',{d:'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'}],['polyline',{points:'15 3 21 3 21 9'}],['line',{x1:10,y1:14,x2:21,y2:3}]],
+    RefreshCw:[['polyline',{points:'23 4 23 10 17 10'}],['polyline',{points:'1 20 1 14 7 14'}],['path',{d:'M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15'}]],
+    Copy:[['rect',{x:9,y:9,width:13,height:13,rx:2,ry:2}],['path',{d:'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'}]],
+    List:[['line',{x1:8,y1:6,x2:21,y2:6}],['line',{x1:8,y1:12,x2:21,y2:12}],['line',{x1:8,y1:18,x2:21,y2:18}],['line',{x1:3,y1:6,x2:3.01,y2:6}],['line',{x1:3,y1:12,x2:3.01,y2:12}],['line',{x1:3,y1:18,x2:3.01,y2:18}]],
+    Zap:[['polygon',{points:'13 2 3 14 12 14 11 22 21 10 12 10 13 2'}]],
+    ChevronDown:[['path',{d:'m6 9 6 6 6-6'}]],
+  };
+  Object.entries(ic).forEach(([name,paths])=>{
+    window.LucideIcons[name]=({size=24,style,className})=>
+      R.createElement('svg',{xmlns:'http://www.w3.org/2000/svg',width:size,height:size,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round',style,className},
+        paths.map(([tag,attrs],i)=>R.createElement(tag,{key:i,...attrs})));
+  });
+})();
+</script>
+<script type="text/babel">
+const {useState,useMemo,useEffect,useRef,useCallback}=React;
+const {Plus,Circle,CheckCircle2,Edit2,ArrowLeft,X,Download,Upload,Trash2,MoreVertical,Calendar,Sparkles,Inbox,Target,Layers,CheckSquare,Clock,AlertCircle,FileText,ExternalLink,RefreshCw,Copy,List,Zap,ChevronDown}=window.LucideIcons;
+
+/* ─── UTILS ─────────────────────────────────────────────────────────────── */
+const todayStr=()=>new Date().toISOString().split('T')[0];
+function formatDate(d){
+  if(!d)return'—';
+  const date=new Date(d+'T00:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  const dd=new Date(date);dd.setHours(0,0,0,0);
+  if(dd.getTime()===today.getTime())return'Hoy';
+  const tom=new Date(today);tom.setDate(today.getDate()+1);
+  if(dd.getTime()===tom.getTime())return'Mañana';
+  return date.toLocaleDateString('es-AR',{day:'numeric',month:'short'});
+}
+function isOverdue(due,status){
+  if(status==='done'||!due)return false;
+  const today=new Date();today.setHours(0,0,0,0);
+  const d=new Date(due+'T00:00:00');d.setHours(0,0,0,0);
+  return d<today;
+}
+function isToday(d){
+  if(!d)return false;
+  const today=new Date();today.setHours(0,0,0,0);
+  const dd=new Date(d+'T00:00:00');dd.setHours(0,0,0,0);
+  return dd.getTime()===today.getTime();
+}
+function calcDays(end){
+  if(!end)return null;
+  const days=Math.ceil((new Date(end)-new Date())/86400000);
+  return{days,isOv:days<0};
+}
+function getProgressColor(p){return p>=60?'#22c55e':p>=30?'#f59e0b':'#ef4444';}
+function ringOffset(pct){return 100.5-(pct*100.5/100);}
+function ringColor(pct){return pct>=60?'#22c55e':pct>=30?'#f59e0b':'#ef4444';}
+function extractUrls(text){return(text||'').match(/(https?:\/\/[^\s]+)/g)||[];}
+const MES_ES={1:'Ene',2:'Feb',3:'Mar',4:'Abr',5:'May',6:'Jun',7:'Jul',8:'Ago',9:'Sep',10:'Oct',11:'Nov',12:'Dic'};
+
+/* ─── RECURRENCE HELPERS ────────────────────────────────────────────────── */
+function nextRecurDate(date,recur){
+  const d=new Date(date+'T00:00:00');
+  if(recur==='daily')d.setDate(d.getDate()+1);
+  else if(recur==='weekly')d.setDate(d.getDate()+7);
+  else if(recur==='biweekly')d.setDate(d.getDate()+14);
+  else if(recur==='monthly')d.setMonth(d.getMonth()+1);
+  return d.toISOString().split('T')[0];
+}
+function genRecurInstances(name,startDate,endDate,recur){
+  const tasks=[];
+  let cur=startDate;
+  const max=new Date(endDate+'T00:00:00');
+  let i=1;
+  while(new Date(cur+'T00:00:00')<=max&&i<=365){
+    tasks.push({id:Date.now()+Math.random(),name:`${name} ${i}`,status:'pending',doDate:cur,dueDate:cur,note:'',subtasks:[],recur,recurBase:name,recurIndex:i});
+    cur=nextRecurDate(cur,recur);i++;
+  }
+  return tasks;
+}
+const RECUR_LABELS={'':'Sin repetición',daily:'Cada día',weekly:'Cada semana',biweekly:'Cada 2 semanas',monthly:'Cada mes'};
+
+/* ─── CSS ────────────────────────────────────────────────────────────────── */
+const S=`
+:root{
+  --bg:#0f0f11;--sf:#141416;--sf2:#18181c;--sf3:#222228;
+  --bd:rgba(255,255,255,0.07);--bdh:rgba(255,255,255,0.13);
+  --tx:#f0f0f5;--tx2:#9898a8;--tx3:#55556a;
+  --ac:#6c63ff;--acs:#6c63ff22;
+  --gr:#22c55e;--grd:rgba(34,197,94,.13);
+  --am:#f59e0b;--amd:rgba(245,158,11,.13);
+  --rd:#ef4444;--rdd:rgba(239,68,68,.11);
+  --r:12px;--rs:8px;
+}
+.root{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);min-height:100vh;color:var(--tx);}
+.root ::-webkit-scrollbar{width:4px;height:4px;}
+.root ::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px;}
+/* header */
+.hdr{background:var(--sf2);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:40;}
+.hdr-in{max-width:920px;margin:0 auto;padding:0 20px;}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 0;}
+.logo{font-family:'Syne',system-ui,sans-serif;font-weight:800;font-size:21px;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;}
+.logo span{color:var(--ac);}
+.badge{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx3);background:var(--sf3);border:1px solid var(--bd);padding:3px 7px;border-radius:20px;}
+.nav{display:flex;margin-top:10px;overflow-x:auto;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none;}
+.nav-btn{background:none;border:none;padding:9px 14px;font-size:13px;font-weight:500;color:var(--tx2);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+.nav-btn:hover{color:var(--tx);}
+.nav-btn.on{color:var(--tx);border-bottom-color:var(--ac);}
+.nav-pill{font-size:10px;font-weight:700;background:var(--acs);color:var(--ac);border-radius:10px;padding:1px 6px;}
+/* main */
+.main{max-width:920px;margin:0 auto;padding:26px 20px;}
+.sec-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;}
+.sec-title{font-family:'Syne',system-ui,sans-serif;font-size:24px;font-weight:700;line-height:1.2;}
+.sec-sub{font-size:13px;color:var(--tx2);margin:3px 0 0;}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:inherit;}
+.btn-pri{background:var(--ac);color:#fff;padding:8px 14px;}
+.btn-pri:hover{background:#7c74ff;}
+.btn-ghost{background:var(--sf3);color:var(--tx2);padding:7px 12px;border:1px solid var(--bd);}
+.btn-ghost:hover{color:var(--tx);border-color:var(--bdh);}
+.btn-danger{background:var(--rdd);color:var(--rd);padding:7px 12px;border:1px solid #ef444330;}
+.btn-danger:hover{background:#ef444430;}
+.btn-sm{padding:5px 9px;font-size:12px;}
+.btn-icon{background:none;border:none;padding:5px;color:var(--tx3);cursor:pointer;border-radius:var(--rs);display:flex;align-items:center;transition:color .15s,background .15s;}
+.btn-icon:hover{color:var(--tx);background:var(--sf3);}
+/* filters */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+.fp{background:var(--sf3);border:1px solid var(--bd);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;color:var(--tx2);cursor:pointer;transition:all .15s;}
+.fp:hover{border-color:var(--bdh);color:var(--tx);}
+.fp.on{background:var(--acs);border-color:var(--ac);color:var(--ac);}
+/* task card */
+.tc{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:13px 14px;display:flex;align-items:flex-start;gap:11px;transition:border-color .15s;position:relative;overflow:hidden;}
+.tc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--area-color,var(--bd));border-radius:0 2px 2px 0;}
+.tc:hover{border-color:var(--bdh);}
+.tc.done{opacity:.5;}
+.chk{background:none;border:none;padding:0;cursor:pointer;display:flex;flex-shrink:0;margin-top:1px;color:var(--tx3);transition:color .15s,transform .15s;}
+.chk:hover{color:var(--ac);transform:scale(1.1);}
+.chk.done{color:var(--gr);}
+.tc-body{flex:1;min-width:0;}
+.tc-name{font-size:14px;font-weight:500;color:var(--tx);margin-bottom:4px;line-height:1.4;}
+.tc-name.done{text-decoration:line-through;color:var(--tx3);}
+.tc-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.tc-proj{font-size:11px;color:var(--tx2);display:flex;align-items:center;gap:3px;cursor:pointer;}
+.tc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.tc-date{font-size:11px;display:flex;align-items:center;gap:3px;}
+.tc-date.ov{color:var(--rd);font-weight:500;}
+.tc-date.ok{color:var(--tx3);}
+.tc-date.tdy{color:var(--am);font-weight:500;}
+.recur-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--ac);background:var(--acs);border-radius:4px;padding:1px 5px;}
+.note-preview{margin-top:6px;padding:6px 9px;background:var(--sf3);border:1px solid var(--bd);border-radius:6px;font-size:12px;color:var(--tx2);line-height:1.5;word-break:break-word;}
+.note-link{color:var(--ac);text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-size:11px;margin-top:3px;}
+.note-link:hover{text-decoration:underline;}
+.note-ed{margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);}
+.note-ed textarea{width:100%;background:var(--sf3);border:1px solid var(--bdh);border-radius:var(--rs);padding:9px 11px;font-size:13px;font-family:inherit;color:var(--tx);outline:none;resize:vertical;min-height:68px;transition:border-color .15s;}
+.note-ed textarea:focus{border-color:var(--ac);}
+.note-ed-foot{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.note-hint{font-size:11px;color:var(--tx3);}
+/* action bar */
+.abar{display:flex;flex-shrink:0;align-self:flex-start;background:var(--sf3);border:1px solid var(--bd);border-radius:7px;overflow:hidden;}
+.abar-btn{background:none;border:none;padding:5px 8px;cursor:pointer;display:flex;align-items:center;color:var(--tx2);transition:background .15s,color .15s;border-right:1px solid var(--bd);}
+.abar-btn:last-child{border-right:none;}
+.abar-btn:hover{background:var(--bdh);color:var(--tx);}
+.abar-btn.ac{color:var(--ac);}
+.abar-btn.danger:hover{background:var(--rdd);color:var(--rd);}
+/* subtask */
+.sub-row{display:flex;align-items:center;gap:8px;padding:4px 0;}
+.sub-chk{background:none;border:none;padding:0;cursor:pointer;display:flex;color:var(--tx3);}
+.sub-chk.done{color:var(--gr);}
+/* progress */
+.pbar{height:4px;background:var(--sf3);border-radius:2px;overflow:hidden;flex:1;}
+.pfill{height:100%;border-radius:2px;transition:width .4s ease;}
+/* areas */
+.areas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.area-card{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:18px 16px;cursor:pointer;transition:border-color .15s,transform .15s;position:relative;overflow:hidden;}
+.area-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--area-color,var(--ac));}
+.area-card:hover{border-color:var(--bdh);transform:translateY(-2px);}
+.area-emoji{font-size:26px;margin-bottom:8px;display:block;}
+.area-name{font-family:'Syne',system-ui,sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;}
+.area-vision{font-size:11px;color:var(--tx2);line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.area-stats{display:flex;align-items:center;gap:8px;}
+/* project view */
+.pv-grp{margin-bottom:4px;}
+.pv-grp-hdr{display:flex;align-items:center;gap:7px;padding:11px 0 7px;}
+.pv-grp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.pv-grp-name{font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--tx3);flex:1;}
+.pv-card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:4px;transition:border-color .15s;}
+.pv-card.open{border-color:var(--bdh);}
+.pv-row{display:flex;align-items:center;gap:11px;padding:13px;cursor:pointer;user-select:none;}
+.pv-stripe{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:34px;}
+.pv-info{flex:1;min-width:0;}
+.pv-name{font-size:14px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pv-meta{display:flex;align-items:center;gap:7px;margin-top:2px;}
+.pv-mp{font-size:11px;color:var(--tx3);}
+.ring{position:relative;width:36px;height:36px;flex-shrink:0;}
+.ring svg{width:36px;height:36px;}
+.ring circle{fill:none;stroke-width:3;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);}
+.ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+.pv-chev{color:var(--tx3);transition:transform .2s;flex-shrink:0;}
+.pv-card.open .pv-chev{transform:rotate(180deg);}
+.pv-edit{width:28px;height:28px;border-radius:7px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tx3);transition:background .12s,color .12s;flex-shrink:0;}
+.pv-edit:hover{background:var(--sf3);color:var(--tx2);}
+.pv-drawer{border-top:1px solid var(--bd);overflow:hidden;max-height:0;transition:max-height .3s ease;}
+.pv-card.open .pv-drawer{max-height:4000px;}
+.pv-dmeta{padding:11px 15px;border-bottom:1px solid var(--bd);}
+.pv-desc{font-size:12px;color:var(--tx2);line-height:1.6;}
+.pv-chip{display:inline-flex;align-items:center;font-size:10px;font-weight:600;border-radius:20px;padding:2px 8px;margin-top:5px;}
+.pv-chip-ok{background:var(--sf3);color:var(--tx3);}
+.pv-chip-soon{background:var(--amd);color:var(--am);}
+.pv-chip-ov{background:var(--rdd);color:var(--rd);}
+.pv-t-row{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 13px;transition:background .1s;position:relative;}
+.pv-t-row:hover{background:rgba(255,255,255,.02);}
+.pv-chkb{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--bdh);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,background .15s;}
+.pv-chkb.done{background:var(--grd);border-color:var(--gr);}
+.pv-tbody{flex:1;min-width:0;}
+.pv-tname{font-size:13px;color:var(--tx);line-height:1.4;}
+.pv-tname.done{text-decoration:line-through;color:var(--tx3);}
+.pv-tdate{font-size:11px;color:var(--tx3);margin-top:1px;}
+.pv-tdate.ov{color:var(--rd);}
+.pv-tdate.tdy{color:var(--am);}
+.pv-acts{display:none;align-items:center;gap:1px;flex-shrink:0;}
+.pv-t-row:hover .pv-acts{opacity:1;}
+.pv-ab{width:27px;height:27px;border-radius:7px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tx3);transition:background .1s,color .1s;}
+.pv-ab:hover{background:var(--sf3);color:var(--tx2);}
+.pv-ab.danger:hover{background:var(--rdd);color:var(--rd);}
+.pv-more{width:30px;height:30px;border-radius:7px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tx3);flex-shrink:0;transition:background .1s;}
+.pv-more:hover{background:var(--sf3);}
+/* sheet */
+.sheet-bd{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:80;opacity:0;pointer-events:none;transition:opacity .22s;}
+.sheet-bd.show{opacity:1;pointer-events:all;}
+.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--sf2);border-top:1px solid var(--bdh);border-radius:20px 20px 0 0;z-index:90;padding-bottom:max(env(safe-area-inset-bottom),16px);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);}
+.sheet.show{transform:translateY(0);}
+.sheet-handle{width:36px;height:4px;background:var(--sf3);border-radius:2px;margin:12px auto 4px;}
+.sheet-title{padding:8px 18px 13px;font-size:13px;font-weight:500;color:var(--tx2);border-bottom:1px solid var(--bd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sheet-btns{padding:8px 10px;display:flex;flex-direction:column;gap:2px;}
+.sheet-btn{display:flex;align-items:center;gap:13px;padding:12px 11px;border-radius:11px;background:none;border:none;font-size:15px;font-weight:400;color:var(--tx);cursor:pointer;width:100%;text-align:left;transition:background .1s;font-family:inherit;}
+.sheet-btn:hover{background:var(--sf3);}
+.sheet-btn.danger{color:var(--rd);}
+.sheet-ico{width:36px;height:36px;border-radius:9px;background:var(--sf3);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sheet-btn.danger .sheet-ico{background:var(--rdd);}
+.sheet-cancel{margin:4px 10px 8px;background:var(--sf3);border:none;border-radius:13px;padding:15px;font-size:15px;font-weight:600;color:var(--tx);cursor:pointer;width:calc(100% - 20px);transition:opacity .15s;font-family:inherit;}
+.sheet-cancel:hover{opacity:.8;}
+/* modal */
+.mover{position:fixed;inset:0;background:#00000088;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.mbox{background:var(--sf2);border:1px solid var(--bdh);border-radius:16px;width:100%;max-width:500px;box-shadow:0 24px 60px #00000080;max-height:90vh;overflow-y:auto;}
+.mhdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--sf2);z-index:1;}
+.mtitle{font-family:'Syne',system-ui,sans-serif;font-size:17px;font-weight:700;}
+.mbody{padding:18px 22px 22px;display:flex;flex-direction:column;gap:13px;}
+.flabel{display:block;font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--tx3);margin-bottom:5px;}
+.finput{width:100%;background:var(--sf3);border:1px solid var(--bdh);border-radius:var(--rs);padding:9px 11px;font-size:14px;font-family:inherit;color:var(--tx);outline:none;transition:border-color .15s;}
+.finput:focus{border-color:var(--ac);}
+.finput::placeholder{color:var(--tx3);}
+.fselect{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23555566' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;}
+/* inbox */
+.ib-card{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:13px 15px;transition:border-color .15s;}
+.ib-card:hover{border-color:var(--bdh);}
+.ib-text{font-size:14px;color:var(--tx);line-height:1.5;margin-bottom:9px;}
+.ib-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;}
+.ib-ts{font-size:11px;color:var(--tx3);}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:22px;}
+.stat{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:13px 15px;}
+.stat-v{font-family:'Syne',system-ui,sans-serif;font-size:24px;font-weight:800;line-height:1;margin-bottom:3px;}
+.stat-l{font-size:11px;color:var(--tx3);}
+/* batch modal specific */
+.tab-row{display:flex;gap:4px;background:var(--sf3);border-radius:var(--rs);padding:3px;margin-bottom:6px;}
+.tab-btn{flex:1;padding:7px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all .15s;font-family:inherit;color:var(--tx2);background:none;}
+.tab-btn.on{background:var(--sf2);color:var(--tx);box-shadow:0 1px 4px #00000030;}
+.preview-list{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;}
+.preview-item{display:flex;align-items:center;gap:8px;padding:6px 9px;background:var(--sf3);border-radius:6px;font-size:12px;color:var(--tx2);}
+.preview-item .pi-date{font-size:10px;color:var(--tx3);margin-left:auto;white-space:nowrap;}
+.preview-item .pi-name{flex:1;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.count-badge{font-size:11px;font-weight:700;color:var(--ac);background:var(--acs);border-radius:20px;padding:2px 8px;}
+/* recur section in task form */
+.recur-sect{background:var(--sf3);border:1px solid var(--bd);border-radius:var(--rs);padding:12px 14px;}
+.recur-mode-row{display:flex;gap:4px;margin-top:9px;}
+.recur-mode-btn{flex:1;padding:6px;font-size:11px;font-weight:600;border:1px solid var(--bd);border-radius:6px;cursor:pointer;transition:all .15s;font-family:inherit;color:var(--tx2);background:none;}
+.recur-mode-btn.on{background:var(--acs);border-color:var(--ac);color:var(--ac);}
+/* inline capture */
+.ic{background:var(--sf2);border:1px solid var(--bdh);border-radius:var(--r);padding:12px 14px;display:flex;gap:9px;align-items:center;margin-bottom:14px;}
+.ic input{flex:1;background:none;border:none;font-size:14px;font-family:inherit;color:var(--tx);outline:none;}
+.ic input::placeholder{color:var(--tx3);}
+/* misc */
+.dd-wrap{position:relative;}
+.dd-menu{position:absolute;right:0;top:calc(100% + 5px);background:var(--sf2);border:1px solid var(--bdh);border-radius:var(--r);min-width:175px;z-index:50;overflow:hidden;box-shadow:0 8px 24px #00000060;}
+.dd-item{width:100%;background:none;border:none;padding:9px 13px;font-size:13px;color:var(--tx2);cursor:pointer;display:flex;align-items:center;gap:8px;text-align:left;transition:background .1s,color .1s;font-family:inherit;}
+.dd-item:hover{background:var(--sf3);color:var(--tx);}
+.dd-item.danger{color:var(--rd);}
+.dd-item.danger:hover{background:var(--rdd);}
+.dd-div{height:1px;background:var(--bd);margin:3px 0;}
+.empty{text-align:center;padding:52px 20px;color:var(--tx3);}
+.empty-title{font-family:'Syne',system-ui,sans-serif;font-size:15px;font-weight:600;color:var(--tx2);margin-bottom:3px;}
+.back-btn{background:none;border:none;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--tx2);cursor:pointer;padding:0;margin-bottom:18px;transition:color .15s;font-family:inherit;}
+.back-btn:hover{color:var(--tx);}
+.chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;border-radius:20px;padding:2px 7px;font-weight:600;}
+@media(min-width:640px){.pv-more{display:none!important;}.pv-acts{display:flex!important;}}
+@media(max-width:639px){.pv-acts{display:none!important;}.pv-more{display:flex!important;}}
+`;
+
+/* ─── INITIAL DATA ───────────────────────────────────────────────────────── */
+const getInitialData=()=>({
+  areas:[
+    {id:1,name:'Finance',emoji:'💰',vision:'Ordenar y optimizar mis finanzas personales',color:'#10B981'},
+    {id:2,name:'Spiritual',emoji:'☀️',vision:'Fortalecer mi relación con Dios',color:'#F59E0B'},
+    {id:3,name:'Personal Development',emoji:'🌱',vision:'Crecer, reflexionar, y ver mi progreso',color:'#EC4899'},
+    {id:4,name:'Work',emoji:'💼',vision:'Desarrollar mis proyectos',color:'#8B5CF6'},
+    {id:5,name:'Education',emoji:'🎓',vision:'Profesionalizarme en datos',color:'#3B82F6'},
+  ],
+  projects:[
+    {id:1,areaId:1,name:'Finanzas 2026',description:'Organizar todas las finanzas del año 2026',startDate:'2026-01-01',endDate:'2026-12-31',year:2026,tasks:[
+      {id:1,name:'Hacer Facturas 1/12',status:'done',doDate:'2026-01-15',dueDate:'2026-01-31',note:'',subtasks:[]},
+      {id:2,name:'Hacer Facturas 2/12',status:'done',doDate:'2026-02-15',dueDate:'2026-02-28',note:'',subtasks:[]},
+      {id:3,name:'Hacer Facturas 3/12',status:'pending',doDate:'2026-03-15',dueDate:'2026-03-31',note:'',subtasks:[]},
+      {id:13,name:'Activar fixed term',status:'done',doDate:'2026-01-05',dueDate:'2026-01-05',note:'',subtasks:[]},
+    ]},
+    {id:2,areaId:1,name:'Dolarización Personal 2026',description:'Blindar mi patrimonio en USD',startDate:'2026-02-16',endDate:'2026-04-30',year:2026,tasks:[
+      {id:20,name:'Definir % de ahorro en USD',status:'done',doDate:'2026-02-20',dueDate:'2026-02-23',note:'',subtasks:[]},
+      {id:21,name:'Revisar presupuesto y trackear Marzo completo',status:'pending',doDate:'2026-03-01',dueDate:'2026-03-31',note:'',subtasks:[]},
+    ]},
+    {id:3,areaId:2,name:'Letters to God 2026',description:'Escribir 12 cartas a Dios durante el año',startDate:'2026-01-01',endDate:'2026-12-31',year:2026,tasks:[
+      {id:30,name:'Carta 1/12',status:'done',doDate:'2026-01-25',dueDate:'2026-01-31',note:'',subtasks:[]},
+      {id:31,name:'Carta 2/12',status:'pending',doDate:'2026-02-15',dueDate:'2026-02-28',note:'',subtasks:[]},
+      {id:32,name:'Carta 3/12',status:'pending',doDate:'2026-03-15',dueDate:'2026-03-31',note:'',subtasks:[]},
+    ]},
+    {id:4,areaId:5,name:'Tecnicatura en Gestión y Análisis de Datos',description:'UBA - CBC: Trabajo y Sociedad',startDate:'2026-03-01',endDate:'2026-07-31',year:2026,tasks:[
+      {id:'e1',name:'Confirmar inscripción y horarios',status:'pending',doDate:'2026-02-24',dueDate:'2026-02-28',note:'',subtasks:[]},
+      {id:'e2',name:'Conseguir programa de la materia',status:'pending',doDate:'2026-03-01',dueDate:'2026-03-05',note:'',subtasks:[]},
+      {id:'e9',name:'✅ APROBAR Trabajo y Sociedad',status:'pending',doDate:'2026-07-01',dueDate:'2026-07-31',note:'',subtasks:[]},
+    ]},
+    {id:5,areaId:3,name:'Progreso Visible 2026',description:'Sistema para trackear y CELEBRAR avances',startDate:'2026-02-16',endDate:'2026-03-31',year:2026,tasks:[
+      {id:'p1',name:'Listar 10 cosas que SÍ logré en Enero 2026',status:'pending',doDate:'2026-02-20',dueDate:'2026-02-23',note:'',subtasks:[]},
+      {id:'p2',name:'Definir 3 métricas de progreso semanales',status:'pending',doDate:'2026-02-24',dueDate:'2026-02-28',note:'',subtasks:[]},
+    ]},
+  ],
+  inbox:[],
+});
+
+/* ─── SMALL COMPONENTS ───────────────────────────────────────────────────── */
+function Modal({title,onClose,children,wide}){
+  return(
+    <div className="mover" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="mbox" style={wide?{maxWidth:600}:{}}>
+        <div className="mhdr">
+          <span className="mtitle">{title}</span>
+          <button className="btn-icon" onClick={onClose}><X size={17}/></button>
+        </div>
+        <div className="mbody">{children}</div>
+      </div>
+    </div>
+  );
+}
+function ProgressRing({pct}){
+  const c=ringColor(pct),o=ringOffset(pct);
+  return(
+    <div className="ring">
+      <svg viewBox="0 0 38 38">
+        <circle cx="19" cy="19" r="16" stroke="var(--sf3)"/>
+        <circle cx="19" cy="19" r="16" stroke={c} strokeDasharray="100.5" strokeDashoffset={o} style={{transition:'stroke-dashoffset .5s ease'}}/>
+      </svg>
+      <div className="ring-pct" style={{color:c}}>{pct}%</div>
+    </div>
+  );
+}
+function NotePreview({note}){
+  if(!note?.trim())return null;
+  const urls=extractUrls(note);
+  return(
+    <div className="note-preview">
+      <div style={{display:'flex',gap:5}}>
+        <FileText size={10} style={{flexShrink:0,marginTop:2,color:'var(--ac)'}}/>
+        <span style={{flex:1,whiteSpace:'pre-wrap'}}>{note}</span>
+      </div>
+      {urls.map((u,i)=><a key={i} href={u} target="_blank" rel="noopener noreferrer" className="note-link" onClick={e=>e.stopPropagation()}><ExternalLink size={9}/>{u.length>50?u.slice(0,50)+'…':u}</a>)}
+    </div>
+  );
+}
+
+/* ─── RECURRENCE FORM SECTION ────────────────────────────────────────────── */
+function RecurSection({recur,setRecur,recurMode,setRecurMode,recurEnd,setRecurEnd}){
+  return(
+    <div className="recur-sect">
+      <div style={{display:'flex',alignItems:'center',gap:8}}>
+        <RefreshCw size={13} style={{color:'var(--ac)'}}/>
+        <span style={{fontSize:13,fontWeight:600,color:'var(--tx)'}}>Repetición</span>
+      </div>
+      <div style={{marginTop:9}}>
+        <label className="flabel">Frecuencia</label>
+        <select className="finput fselect" value={recur} onChange={e=>setRecur(e.target.value)}>
+          {Object.entries(RECUR_LABELS).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+        </select>
+      </div>
+      {recur&&(
+        <>
+          <div className="recur-mode-row">
+            <button className={`recur-mode-btn${recurMode==='onComplete'?' on':''}`} onClick={()=>setRecurMode('onComplete')}>⚡ Al completar</button>
+            <button className={`recur-mode-btn${recurMode==='allAtOnce'?' on':''}`} onClick={()=>setRecurMode('allAtOnce')}>📋 Crear todas ahora</button>
+          </div>
+          {recurMode==='allAtOnce'&&(
+            <div style={{marginTop:9}}>
+              <label className="flabel">Generar hasta</label>
+              <input type="date" className="finput" value={recurEnd} onChange={e=>setRecurEnd(e.target.value)}/>
+            </div>
+          )}
+          <div style={{marginTop:7,fontSize:11,color:'var(--tx3)',lineHeight:1.5}}>
+            {recurMode==='onComplete'?'La siguiente tarea se crea automáticamente al completar la actual.':'Se crean todas las instancias en el proyecto de una vez.'}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ─── BATCH MODAL ────────────────────────────────────────────────────────── */
+function BatchModal({projects,areas,onClose,onAdd}){
+  const[tab,setTab]=useState('pattern'); // 'pattern' | 'text'
+  // pattern
+  const[pName,setPName]=useState('Leer');
+  const[pStart,setPStart]=useState('2026-03-01');
+  const[pEnd,setPEnd]=useState('2026-03-31');
+  const[pFreq,setPFreq]=useState('daily');
+  const[pProject,setPProject]=useState(projects[0]?.id||null);
+  const[pSuffix,setPSuffix]=useState('date'); // 'date' | 'number'
+  // text
+  const[tText,setTText]=useState('');
+  const[tProject,setTProject]=useState(projects[0]?.id||null);
+  const[tDate,setTDate]=useState('2026-03-01');
+  const[tFreq,setTFreq]=useState('daily');
+  const[tDateMode,setTDateMode]=useState('same'); // 'same' | 'seq'
+
+  const patternPreview=useMemo(()=>{
+    if(!pName.trim()||!pStart||!pEnd)return[];
+    const out=[];
+    let cur=pStart;const max=new Date(pEnd+'T00:00:00');let i=1;
+    while(new Date(cur+'T00:00:00')<=max&&i<=400){
+      const d=new Date(cur+'T00:00:00');
+      const label=pSuffix==='date'
+        ?`${pName} · ${d.getDate()} ${MES_ES[d.getMonth()+1]}`
+        :`${pName} ${i}`;
+      out.push({name:label,date:cur});
+      cur=nextRecurDate(cur,pFreq);i++;
+    }
+    return out;
+  },[pName,pStart,pEnd,pFreq,pSuffix]);
+
+  const textLines=useMemo(()=>tText.split('\n').map(l=>l.trim()).filter(Boolean),[tText]);
+  const textPreview=useMemo(()=>{
+    if(!textLines.length)return[];
+    return textLines.map((name,i)=>{
+      let date=tDate;
+      if(tDateMode==='seq'&&i>0){
+        let cur=tDate;
+        for(let k=0;k<i;k++)cur=nextRecurDate(cur,tFreq);
+        date=cur;
+      }
+      return{name,date};
+    });
+  },[textLines,tDate,tFreq,tDateMode]);
+
+  const handleAdd=()=>{
+    const preview=tab==='pattern'?patternPreview:textPreview;
+    const pid=tab==='pattern'?pProject:tProject;
+    if(!preview.length||!pid){return;}
+    const tasks=preview.map(({name,date})=>({
+      id:Date.now()+Math.random(),name,status:'pending',
+      doDate:date,dueDate:date,note:'',subtasks:[],
+    }));
+    onAdd(Number(pid),tasks);
+    onClose();
+  };
+
+  const preview=tab==='pattern'?patternPreview:textPreview;
+
+  return(
+    <Modal title="Carga en lote" onClose={onClose} wide>
+      <div className="tab-row">
+        <button className={`tab-btn${tab==='pattern'?' on':''}`} onClick={()=>setTab('pattern')}><Zap size={12}/> Por patrón</button>
+        <button className={`tab-btn${tab==='text'?' on':''}`} onClick={()=>setTab('text')}><List size={12}/> Por lista de texto</button>
+      </div>
+
+      {tab==='pattern'&&(
+        <>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div style={{gridColumn:'1/-1'}}>
+              <label className="flabel">Nombre base</label>
+              <input className="finput" value={pName} onChange={e=>setPName(e.target.value)} placeholder="Ej: Leer, Estudiar, Meditar…"/>
+            </div>
+            <div>
+              <label className="flabel">Desde</label>
+              <input type="date" className="finput" value={pStart} onChange={e=>setPStart(e.target.value)}/>
+            </div>
+            <div>
+              <label className="flabel">Hasta</label>
+              <input type="date" className="finput" value={pEnd} onChange={e=>setPEnd(e.target.value)}/>
+            </div>
+          </div>
+          <div>
+            <label className="flabel">Frecuencia</label>
+            <select className="finput fselect" value={pFreq} onChange={e=>setPFreq(e.target.value)}>
+              <option value="daily">Cada día</option>
+              <option value="weekly">Cada semana</option>
+              <option value="biweekly">Cada 2 semanas</option>
+              <option value="monthly">Cada mes</option>
+            </select>
+          </div>
+          <div>
+            <label className="flabel">Sufijo del nombre</label>
+            <div style={{display:'flex',gap:6}}>
+              <button className={`recur-mode-btn${pSuffix==='date'?' on':''}`} onClick={()=>setPSuffix('date')}>📅 Fecha (Leer · 1 Mar)</button>
+              <button className={`recur-mode-btn${pSuffix==='number'?' on':''}`} onClick={()=>setPSuffix('number')}>🔢 Número (Leer 1)</button>
+            </div>
+          </div>
+          <div>
+            <label className="flabel">Proyecto destino</label>
+            <select className="finput fselect" value={pProject||''} onChange={e=>setPProject(Number(e.target.value))}>
+              {projects.map(p=>{const a=areas.find(a=>a.id===p.areaId);return<option key={p.id} value={p.id}>{a?.emoji} {p.name}</option>;})}
+            </select>
+          </div>
+        </>
+      )}
+
+      {tab==='text'&&(
+        <>
+          <div>
+            <label className="flabel">Lista de tareas (una por línea)</label>
+            <textarea className="finput" rows={6} value={tText} onChange={e=>setTText(e.target.value)}
+              placeholder={"Leer Capítulo 1\nLeer Capítulo 2\nEjercitar vocabulario\nRepaso general"}
+              style={{resize:'vertical'}}/>
+          </div>
+          <div>
+            <label className="flabel">Proyecto destino</label>
+            <select className="finput fselect" value={tProject||''} onChange={e=>setTProject(Number(e.target.value))}>
+              {projects.map(p=>{const a=areas.find(a=>a.id===p.areaId);return<option key={p.id} value={p.id}>{a?.emoji} {p.name}</option>;})}
+            </select>
+          </div>
+          <div>
+            <label className="flabel">Fechas</label>
+            <div style={{display:'flex',gap:5,marginBottom:8}}>
+              <button className={`recur-mode-btn${tDateMode==='same'?' on':''}`} onClick={()=>setTDateMode('same')}>Misma fecha</button>
+              <button className={`recur-mode-btn${tDateMode==='seq'?' on':''}`} onClick={()=>setTDateMode('seq')}>Secuencial</button>
+            </div>
+            <input type="date" className="finput" value={tDate} onChange={e=>setTDate(e.target.value)}/>
+            {tDateMode==='seq'&&(
+              <div style={{marginTop:8}}>
+                <label className="flabel">Separación</label>
+                <select className="finput fselect" value={tFreq} onChange={e=>setTFreq(e.target.value)}>
+                  <option value="daily">Cada día</option>
+                  <option value="weekly">Cada semana</option>
+                  <option value="biweekly">Cada 2 semanas</option>
+                  <option value="monthly">Cada mes</option>
+                </select>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Preview */}
+      {preview.length>0&&(
+        <div>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:7}}>
+            <label className="flabel" style={{margin:0}}>Vista previa</label>
+            <span className="count-badge">{preview.length} tareas</span>
+          </div>
+          <div className="preview-list">
+            {preview.slice(0,50).map((t,i)=>(
+              <div key={i} className="preview-item">
+                <Circle size={9} style={{flexShrink:0,color:'var(--tx3)'}}/>
+                <span className="pi-name">{t.name}</span>
+                <span className="pi-date">{formatDate(t.date)}</span>
+              </div>
+            ))}
+            {preview.length>50&&<div style={{textAlign:'center',fontSize:11,color:'var(--tx3)',padding:'6px 0'}}>+{preview.length-50} más…</div>}
+          </div>
+        </div>
+      )}
+
+      <button className="btn btn-pri" style={{width:'100%',justifyContent:'center',padding:'11px'}}
+        disabled={!preview.length}
+        onClick={handleAdd}>
+        <Zap size={14}/> Crear {preview.length} tarea{preview.length!==1?'s':''}
+      </button>
+    </Modal>
+  );
+}
+
+/* ─── BOTTOM SHEET ───────────────────────────────────────────────────────── */
+function BottomSheet({task,onClose,onEdit,onDelete}){
+  const show=!!task;
+  const I=(paths)=>({size=18})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">{paths.map(([tag,a],i)=>React.createElement(tag,{key:i,...a}))}</svg>;
+  const EditIc=I([['path',{d:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'}],['path',{d:'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'}]]);
+  const DelIc=I([['polyline',{points:'3 6 5 6 21 6'}],['path',{d:'M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'}],['path',{d:'M10 11v6M14 11v6'}],['path',{d:'M9 6V4h6v2'}]]);
+  return(
+    <>
+      <div className={`sheet-bd${show?' show':''}`} onClick={onClose}/>
+      <div className={`sheet${show?' show':''}`}>
+        <div className="sheet-handle"/>
+        <div className="sheet-title">{task?.name}</div>
+        <div className="sheet-btns">
+          {[{Ic:EditIc,label:'Editar tarea',fn:()=>{onEdit(task);onClose();}},{Ic:DelIc,label:'Eliminar tarea',danger:true,fn:()=>{onDelete(task.id);onClose();}}].map(({Ic,label,danger,fn})=>(
+            <button key={label} className={`sheet-btn${danger?' danger':''}`} onClick={fn}>
+              <div className="sheet-ico"><Ic size={17}/></div>{label}
+            </button>
+          ))}
+        </div>
+        <button className="sheet-cancel" onClick={onClose}>Cancelar</button>
+      </div>
+    </>
+  );
+}
+
+/* ─── TASK CARD ──────────────────────────────────────────────────────────── */
+function TaskCard({task,onToggle,onEdit,onDelete,onNavigate,onToggleSubtask,onAddSubtask,onDeleteSubtask,onSaveNote}){
+  const[expSubs,setExpSubs]=useState(false);
+  const[newSub,setNewSub]=useState('');
+  const[editNote,setEditNote]=useState(false);
+  const[noteVal,setNoteVal]=useState(task.note||'');
+  const ov=isOverdue(task.dueDate,task.status);
+  const tdy=isToday(task.dueDate);
+  const dc=ov?'ov':tdy?'tdy':'ok';
+  const subs=task.subtasks||[];
+  const subsDone=subs.filter(s=>s.status==='done').length;
+  const saveNote=()=>{onSaveNote(task.id,noteVal);setEditNote(false);};
+  return(
+    <div className={`tc${task.status==='done'?' done':''}`} style={{'--area-color':task.areaColor}}>
+      <button className={`chk${task.status==='done'?' done':''}`} onClick={()=>onToggle(task.id)}>
+        {task.status==='done'?<CheckCircle2 size={17}/>:<Circle size={17}/>}
+      </button>
+      <div className="tc-body">
+        <div style={{display:'flex',alignItems:'center',gap:7,marginBottom:4}}>
+          <div className={`tc-name${task.status==='done'?' done':''}`} style={{margin:0,flex:1}}>{task.name}</div>
+          {task.recur&&<span className="recur-badge"><RefreshCw size={8}/>{RECUR_LABELS[task.recur]?.split(' ').slice(-1)[0]}</span>}
+          {task.note?.trim()&&!editNote&&<span style={{display:'inline-flex',alignItems:'center',gap:2,fontSize:9,color:'var(--ac)',background:'var(--acs)',borderRadius:4,padding:'1px 4px'}}><FileText size={8}/>nota</span>}
+          <button className="btn-icon" style={{padding:'2px 3px',opacity:.2}} onClick={()=>setExpSubs(p=>!p)}>
+            <ChevronDown size={12} style={{transform:expSubs?'rotate(180deg)':'none',transition:'transform .15s'}}/>
+          </button>
+        </div>
+        <div className="tc-meta">
+          <span className="tc-proj" onClick={()=>onNavigate()}><span className="tc-dot" style={{backgroundColor:task.areaColor}}/>{task.projectName}</span>
+          {subs.length>0&&<span className="tc-date ok"><CheckSquare size={10}/>{subsDone}/{subs.length}</span>}
+          <span className={`tc-date ${dc}`}>{ov?<AlertCircle size={10}/>:<Calendar size={10}/>}{ov?`Vencido ${formatDate(task.dueDate)}`:formatDate(task.dueDate)}</span>
+        </div>
+        {task.note?.trim()&&!editNote&&<NotePreview note={task.note}/>}
+        {editNote&&(
+          <div className="note-ed">
+            <textarea autoFocus value={noteVal} onChange={e=>setNoteVal(e.target.value)}
+              placeholder="Nota… (Ctrl+Enter guardar)"
+              onKeyDown={e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))saveNote();if(e.key==='Escape'){setNoteVal(task.note||'');setEditNote(false);}}}/>
+            <div className="note-ed-foot">
+              <span className="note-hint">Ctrl+Enter · Esc cancelar</span>
+              <div style={{display:'flex',gap:5}}>
+                <button className="btn btn-ghost btn-sm" onClick={()=>{setNoteVal(task.note||'');setEditNote(false);}}>Cancelar</button>
+                <button className="btn btn-pri btn-sm" onClick={saveNote}>Guardar</button>
+              </div>
+            </div>
+          </div>
+        )}
+        {expSubs&&(
+          <div style={{marginTop:9,paddingTop:9,borderTop:'1px solid var(--bd)'}}>
+            {subs.map(s=>(
+              <div key={s.id} className="sub-row">
+                <button className={`sub-chk${s.status==='done'?' done':''}`} onClick={()=>onToggleSubtask(task.id,s.id)}>
+                  {s.status==='done'?<CheckCircle2 size={13}/>:<Circle size={13}/>}
+                </button>
+                <span style={{flex:1,fontSize:13,color:s.status==='done'?'var(--tx3)':'var(--tx)',textDecoration:s.status==='done'?'line-through':'none'}}>{s.name}</span>
+                <button className="btn-icon" style={{opacity:.2,padding:'1px 3px'}} onMouseEnter={e=>e.currentTarget.style.opacity='1'} onMouseLeave={e=>e.currentTarget.style.opacity='.2'} onClick={()=>onDeleteSubtask(task.id,s.id)}><X size={10}/></button>
+              </div>
+            ))}
+            <div style={{display:'flex',alignItems:'center',gap:8,paddingTop:5}}>
+              <span style={{width:13,height:13,borderRadius:'50%',border:'1.5px solid var(--bdh)',flexShrink:0}}/>
+              <input style={{flex:1,background:'none',border:'none',borderBottom:'1px solid var(--bdh)',fontSize:13,color:'var(--tx)',outline:'none',padding:'2px 0',fontFamily:'inherit'}}
+                placeholder="Subtarea… (Enter)" value={newSub} onChange={e=>setNewSub(e.target.value)}
+                onKeyDown={e=>{if(e.key==='Enter'){onAddSubtask(task.id,newSub);setNewSub('');}if(e.key==='Escape')setExpSubs(false);}}/>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* action bar */}
+      <div className="abar">
+        <button className={`abar-btn${editNote?' ac':''}`} title="Nota" onClick={()=>{setEditNote(p=>!p);setNoteVal(task.note||'');}}><FileText size={13}/></button>
+        <button className="abar-btn" title="Editar" onClick={()=>onEdit(task)}><Edit2 size={13}/></button>
+        <button className="abar-btn danger" title="Eliminar" onClick={()=>onDelete(task.id)}><Trash2 size={13}/></button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── PV TASK ROW ────────────────────────────────────────────────────────── */
+function PVTaskRow({task,onToggle,onEdit,onDelete,onOpenSheet,onToggleSubtask,onAddSubtask,onDeleteSubtask}){
+  const ov=isOverdue(task.dueDate,task.status);
+  const tdy=isToday(task.dueDate);
+  const[expSubs,setExpSubs]=useState(false);
+  const[newSub,setNewSub]=useState('');
+  const subs=task.subtasks||[];
+  const subsDone=subs.filter(s=>s.status==='done').length;
+  const CheckIc=()=><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#22c55e" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2,6 5,9 10,3"/></svg>;
+  const EIc=()=><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>;
+  const DIc=()=><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>;
+  const MIc=()=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>;
+  const ChevIc=()=><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>;
+  return(
+    <div>
+      <div className="pv-t-row">
+        <div className={`pv-chkb${task.status==='done'?' done':''}`} onClick={e=>{e.stopPropagation();onToggle(task.id);}}>
+          {task.status==='done'&&<CheckIc/>}
+        </div>
+        <div className="pv-tbody">
+          <div style={{display:'flex',alignItems:'center',gap:5}}>
+            <div className={`pv-tname${task.status==='done'?' done':''}`} style={{flex:1}}>{task.name}</div>
+            {task.recur&&<span className="recur-badge" style={{fontSize:9}}><RefreshCw size={7}/></span>}
+            <button style={{background:expSubs?'var(--acs)':subs.length>0?'var(--sf3)':'var(--sf2)',border:`1px solid ${expSubs?'var(--ac)':subs.length>0?'var(--bdh)':'var(--bd)'}`,borderRadius:5,padding:'2px 5px',cursor:'pointer',color:expSubs?'var(--ac)':subs.length>0?'var(--tx2)':'var(--tx3)',display:'flex',alignItems:'center',gap:3,transition:'all .15s'}}
+              onClick={e=>{e.stopPropagation();setExpSubs(p=>!p);}}>
+              {subs.length>0&&<span style={{fontSize:10,fontWeight:600,lineHeight:1}}>{subsDone}/{subs.length}</span>}
+              <span style={{display:'inline-block',transform:expSubs?'rotate(180deg)':'none',transition:'transform .15s'}}><ChevIc/></span>
+            </button>
+          </div>
+          <div className={`pv-tdate${ov?' ov':tdy?' tdy':''}`}>{ov?`Vencido · ${formatDate(task.dueDate)}`:formatDate(task.dueDate)}</div>
+        </div>
+        <div className="pv-acts">
+          <button className="pv-ab" onClick={e=>{e.stopPropagation();onEdit(task);}}><EIc/></button>
+          <button className="pv-ab danger" onClick={e=>{e.stopPropagation();onDelete(task.id);}}><DIc/></button>
+        </div>
+        <button className="pv-more" onClick={e=>{e.stopPropagation();onOpenSheet(task);}}><MIc/></button>
+      </div>
+      {expSubs&&(
+        <div style={{paddingLeft:42,paddingBottom:7,paddingRight:12,borderBottom:'1px solid var(--bd)'}}>
+          {subs.map(s=>(
+            <div key={s.id} style={{display:'flex',alignItems:'center',gap:7,padding:'4px 0'}}>
+              <div className={`pv-chkb${s.status==='done'?' done':''}`} style={{width:15,height:15,minWidth:15}}
+                onClick={e=>{e.stopPropagation();onToggleSubtask(task.id,s.id);}}>
+                {s.status==='done'&&<CheckIc/>}
+              </div>
+              <span style={{flex:1,fontSize:12,color:s.status==='done'?'var(--tx3)':'var(--tx2)',textDecoration:s.status==='done'?'line-through':'none'}}>{s.name}</span>
+              <button style={{background:'none',border:'none',padding:'2px 3px',cursor:'pointer',color:'var(--tx3)',opacity:.3,transition:'opacity .1s'}} onMouseEnter={e=>e.currentTarget.style.opacity='1'} onMouseLeave={e=>e.currentTarget.style.opacity='.3'} onClick={()=>onDeleteSubtask(task.id,s.id)}>
+                <X size={9}/>
+              </button>
+            </div>
+          ))}
+          <div style={{display:'flex',alignItems:'center',gap:7,paddingTop:3}}>
+            <span style={{width:15,height:15,borderRadius:'50%',border:'1.5px solid var(--bdh)',flexShrink:0}}/>
+            <input style={{flex:1,background:'none',border:'none',borderBottom:'1px solid var(--bdh)',fontSize:12,color:'var(--tx)',outline:'none',padding:'2px 0',fontFamily:'inherit'}}
+              placeholder="Agregar subtarea… (Enter)" value={newSub} onChange={e=>setNewSub(e.target.value)}
+              onKeyDown={e=>{if(e.key==='Enter'&&newSub.trim()){onAddSubtask(task.id,newSub.trim());setNewSub('');}if(e.key==='Escape')setExpSubs(false);}}/>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── PV PROJECT CARD ────────────────────────────────────────────────────── */
+function PVProjectCard({project,area,onToggleTask,onEditTask,onDeleteTask,onOpenSheet,onAddInlineTask,onEditProject,onToggleSubtask,onAddSubtask,onDeleteSubtask}){
+  const[open,setOpen]=useState(false);
+  const[cap,setCap]=useState('');
+  const total=project.tasks.length;
+  const done=project.tasks.filter(t=>t.status==='done').length;
+  const pct=total>0?Math.round((done/total)*100):0;
+  const di=calcDays(project.endDate);
+  const areaColor=area?.color||'var(--ac)';
+  let chipCls='pv-chip-ok',chipLabel=di?`${di.days}d restantes`:null;
+  if(di?.isOv){chipCls='pv-chip-ov';chipLabel=`${Math.abs(di.days)}d atraso`;}
+  else if(di?.days<=14){chipCls='pv-chip-soon';}
+  const EIc=()=><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>;
+  const ChevIc=()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>;
+  return(
+    <div className={`pv-card${open?' open':''}`}>
+      <div className="pv-row" onClick={()=>setOpen(p=>!p)}>
+        <div className="pv-stripe" style={{background:areaColor}}/>
+        <div className="pv-info">
+          <div className="pv-name">{project.name}</div>
+          <div className="pv-meta">
+            <span className="pv-mp">{done}/{total} tareas</span>
+            {project.endDate&&<span className="pv-mp">· {new Date(project.endDate+'T00:00:00').toLocaleDateString('es-AR',{month:'short',year:'numeric'})}</span>}
+            {chipLabel&&<span className={`chip ${chipCls}`}>{chipLabel}</span>}
+          </div>
+        </div>
+        <ProgressRing pct={pct}/>
+        <button className="pv-edit" title="Editar proyecto" onClick={e=>{e.stopPropagation();onEditProject(project);}}><EIc/></button>
+        <div className="pv-chev"><ChevIc/></div>
+      </div>
+      <div className="pv-drawer">
+        {project.description&&<div className="pv-dmeta"><div className="pv-desc">{project.description}</div></div>}
+        <div style={{paddingTop:3}}>
+          {project.tasks.length===0&&!cap&&(
+            <div style={{textAlign:'center',padding:'12px 0',fontSize:12,color:'var(--tx3)'}}>Sin tareas aún</div>
+          )}
+          {[...project.tasks].sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate)).map(task=>(
+            <PVTaskRow key={task.id} task={task}
+              onToggle={onToggleTask} onEdit={onEditTask}
+              onDelete={onDeleteTask} onOpenSheet={onOpenSheet}
+              onToggleSubtask={onToggleSubtask} onAddSubtask={onAddSubtask} onDeleteSubtask={onDeleteSubtask}/>
+          ))}
+          <div style={{display:'flex',alignItems:'center',gap:9,padding:'9px 13px 11px',borderTop:project.tasks.length>0?'1px solid var(--bd)':'none'}}>
+            <span style={{width:19,height:19,borderRadius:'50%',border:'1.5px solid var(--bdh)',flexShrink:0}}/>
+            <input style={{flex:1,background:'none',border:'none',borderBottom:'1px solid var(--bdh)',fontSize:13,color:'var(--tx)',outline:'none',padding:'2px 0',fontFamily:'inherit'}}
+              placeholder="Nueva tarea… (Enter)" value={cap} onChange={e=>setCap(e.target.value)}
+              onKeyDown={e=>{if(e.key==='Enter'&&cap.trim()){onAddInlineTask(project.id,cap.trim());setCap('');}if(e.key==='Escape')setCap('');}}/>
+            {cap&&<button className="btn-icon" onClick={()=>setCap('')}><X size={12}/></button>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── MAIN APP ───────────────────────────────────────────────────────────── */
+function APTRPlanner(){
+  const getInit=()=>{try{const s=localStorage.getItem('aptr-v13');return s?JSON.parse(s):getInitialData();}catch{return getInitialData();}};
+  const[data,setData]=useState(getInit);
+  const[view,setView]=useState('projects');
+  const[taskFilter,setTaskFilter]=useState('all');
+  const[selAreaId,setSelAreaId]=useState(null);
+  const[editingAreaId,setEditingAreaId]=useState(null);
+  const inboxRef=useRef(null);
+  const[showNewTask,setShowNewTask]=useState(false);
+  const[showNewProject,setShowNewProject]=useState(false);
+  const[showNewArea,setShowNewArea]=useState(false);
+  const[showMenu,setShowMenu]=useState(false);
+  const[showBatch,setShowBatch]=useState(false);
+  const[newTask,setNewTask]=useState({name:'',doDate:'',dueDate:'',projectId:null,note:'',recur:'',recurMode:'onComplete',recurEnd:''});
+  const[newProject,setNewProject]=useState({name:'',areaId:null,startDate:'',endDate:'',description:''});
+  const[newArea,setNewArea]=useState({name:'',emoji:'📁',vision:'',color:'#6c63ff'});
+  const[newInbox,setNewInbox]=useState('');
+  const[showInboxCap,setShowInboxCap]=useState(false);
+  const[showEditTask,setShowEditTask]=useState(false);
+  const[editTaskForm,setEditTaskForm]=useState({id:null,name:'',doDate:'',dueDate:'',projectId:null,note:'',recur:'',recurMode:'onComplete',recurEnd:''});
+  const[assignInboxId,setAssignInboxId]=useState(null);
+  const[editInboxId,setEditInboxId]=useState(null);
+  const[editInboxText,setEditInboxText]=useState('');
+  const[pvSheet,setPvSheet]=useState(null);
+  const[editingProject,setEditingProject]=useState(null);
+
+  useEffect(()=>{localStorage.setItem('aptr-v13',JSON.stringify(data));},[data]);
+
+  const yr=2026;
+  const projects=useMemo(()=>data.projects.filter(p=>p.year===yr).sort((a,b)=>new Date(a.startDate||'9999')-new Date(b.startDate||'9999')),[data.projects]);
+  const allTasks=useMemo(()=>{
+    const t=[];
+    projects.forEach(p=>{const a=data.areas.find(a=>a.id===p.areaId);p.tasks.forEach(tk=>t.push({...tk,projectId:p.id,projectName:p.name,areaColor:a?.color}));});
+    return t.sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
+  },[projects,data.areas]);
+  const weekTasks=useMemo(()=>{const today=new Date();today.setHours(0,0,0,0);const we=new Date(today);we.setDate(today.getDate()+7);return allTasks.filter(t=>{const d=new Date(t.dueDate+'T00:00:00');d.setHours(0,0,0,0);return d>=today&&d<=we;});},[allTasks]);
+  const overdue=useMemo(()=>{const today=new Date();today.setHours(0,0,0,0);return allTasks.filter(t=>{if(t.status==='done')return false;const d=new Date(t.dueDate+'T00:00:00');d.setHours(0,0,0,0);return d<today;});},[allTasks]);
+  const displayTasks=useMemo(()=>{const b=view==='week'?weekTasks:allTasks;return taskFilter==='done'?b.filter(t=>t.status==='done'):taskFilter==='pending'?b.filter(t=>t.status==='pending'):b;},[view,weekTasks,allTasks,taskFilter]);
+  const taskCounts=useMemo(()=>{const b=view==='week'?weekTasks:allTasks;return{all:b.length,pending:b.filter(t=>t.status==='pending').length,done:b.filter(t=>t.status==='done').length};},[view,weekTasks,allTasks]);
+
+  const getAreaProg=id=>{const ap=projects.filter(p=>p.areaId===id);const t=ap.reduce((s,p)=>s+p.tasks.length,0);const d=ap.reduce((s,p)=>s+p.tasks.filter(t=>t.status==='done').length,0);return t>0?Math.round((d/t)*100):0;};
+
+  /* mutations */
+  const upd=fn=>setData(prev=>({...prev,projects:prev.projects.map(p=>({...p,tasks:fn(p)}))}));
+  const toggleTask=id=>upd(p=>p.tasks.map(t=>{
+    if(t.id!==id)return t;
+    const newStatus=t.status==='done'?'pending':'done';
+    // onComplete recurrence: create next instance
+    if(newStatus==='done'&&t.recur&&t.recurMode==='onComplete'){
+      const nextDate=nextRecurDate(t.dueDate,t.recur);
+      const idx=(t.recurIndex||1)+1;
+      setData(prev=>({...prev,projects:prev.projects.map(pp=>{
+        if(!pp.tasks.some(tt=>tt.id===id))return pp;
+        return{...pp,tasks:[...pp.tasks.map(tt=>tt.id===id?{...tt,status:'done'}:tt),
+          {id:Date.now()+Math.random(),name:`${t.recurBase||t.name.replace(/ \d+$/,'')} ${idx}`,
+           status:'pending',doDate:nextDate,dueDate:nextDate,note:'',subtasks:[],
+           recur:t.recur,recurMode:'onComplete',recurBase:t.recurBase||t.name,recurIndex:idx}
+        ]};
+      })}));
+      return t; // handled above
+    }
+    return{...t,status:newStatus};
+  }));
+  const deleteTask=id=>{setPvSheet(null);upd(p=>p.tasks.filter(t=>t.id!==id));};
+  const saveNote=(tid,note)=>upd(p=>p.tasks.map(t=>t.id===tid?{...t,note}:t));
+  const toggleSubtask=(tid,sid)=>upd(p=>p.tasks.map(t=>t.id===tid?{...t,subtasks:(t.subtasks||[]).map(s=>s.id===sid?{...s,status:s.status==='done'?'pending':'done'}:s)}:t));
+  const addSubtask=(tid,name)=>upd(p=>p.tasks.map(t=>t.id===tid?{...t,subtasks:[...(t.subtasks||[]),{id:Date.now(),name,status:'pending'}]}:t));
+  const deleteSubtask=(tid,sid)=>upd(p=>p.tasks.map(t=>t.id===tid?{...t,subtasks:(t.subtasks||[]).filter(s=>s.id!==sid)}:t));
+
+  const openEditTask=task=>{
+    const proj=data.projects.find(p=>p.tasks.some(t=>t.id===task.id));
+    setEditTaskForm({id:task.id,name:task.name,doDate:task.doDate||'',dueDate:task.dueDate||'',projectId:Number(proj?.id)||null,note:task.note||'',recur:task.recur||'',recurMode:task.recurMode||'onComplete',recurEnd:''});
+    setShowEditTask(true);
+  };
+  const updateTask=()=>{
+    if(!editTaskForm.name.trim())return;
+    const tId=Number(editTaskForm.projectId),taskId=editTaskForm.id;
+    setData(prev=>{
+      const orig=prev.projects.find(p=>p.tasks.some(t=>t.id===taskId));
+      const origId=orig?.id,origTask=orig?.tasks.find(t=>t.id===taskId);
+      return{...prev,projects:prev.projects.map(p=>{
+        if(p.id===tId&&p.id===origId)return{...p,tasks:p.tasks.map(t=>t.id===taskId?{...t,name:editTaskForm.name,doDate:editTaskForm.doDate,dueDate:editTaskForm.dueDate,note:editTaskForm.note,recur:editTaskForm.recur,recurMode:editTaskForm.recurMode,recurBase:editTaskForm.name.replace(/ \d+$/,'')}:t)};
+        if(p.id===tId)return{...p,tasks:[...p.tasks,{id:taskId,name:editTaskForm.name,status:origTask?.status||'pending',doDate:editTaskForm.doDate,dueDate:editTaskForm.dueDate,note:editTaskForm.note,subtasks:origTask?.subtasks||[],recur:editTaskForm.recur,recurMode:editTaskForm.recurMode,recurBase:editTaskForm.name.replace(/ \d+$/,'')}]};
+        if(p.id===origId)return{...p,tasks:p.tasks.filter(t=>t.id!==taskId)};
+        return p;
+      })};
+    });
+    setShowEditTask(false);
+  };
+
+  const addTask=()=>{
+    if(!newTask.name.trim()||!newTask.projectId)return;
+    const today=todayStr();
+    if(newTask.recur&&newTask.recurMode==='allAtOnce'&&newTask.recurEnd){
+      const tasks=genRecurInstances(newTask.name,newTask.doDate||today,newTask.recurEnd,newTask.recur);
+      setData(prev=>({...prev,projects:prev.projects.map(p=>p.id===newTask.projectId?{...p,tasks:[...p.tasks,...tasks.map(t=>({...t,recurMode:'allAtOnce'}))]}:p)}));
+    } else {
+      setData(prev=>({...prev,projects:prev.projects.map(p=>p.id===newTask.projectId?{...p,tasks:[...p.tasks,{id:Date.now(),name:newTask.name,status:'pending',doDate:newTask.doDate||today,dueDate:newTask.dueDate||newTask.doDate||today,note:newTask.note||'',subtasks:[],recur:newTask.recur,recurMode:newTask.recurMode,recurBase:newTask.name}]}:p)}));
+    }
+    setNewTask({name:'',doDate:'',dueDate:'',projectId:null,note:'',recur:'',recurMode:'onComplete',recurEnd:''});
+    setShowNewTask(false);
+  };
+  const addInlineTask=(pid,name)=>{
+    const today=todayStr();
+    setData(prev=>({...prev,projects:prev.projects.map(p=>p.id===pid?{...p,tasks:[...p.tasks,{id:Date.now(),name,status:'pending',doDate:today,dueDate:today,note:'',subtasks:[]}]}:p)}));
+  };
+  const addBatchTasks=(pid,tasks)=>{
+    setData(prev=>({...prev,projects:prev.projects.map(p=>p.id===pid?{...p,tasks:[...p.tasks,...tasks]}:p)}));
+  };
+  const addProject=()=>{
+    if(!newProject.name.trim()||!newProject.areaId)return;
+    setData(prev=>({...prev,projects:[...prev.projects,{id:Date.now(),name:newProject.name,description:newProject.description||'',areaId:newProject.areaId,year:yr,startDate:newProject.startDate||todayStr(),endDate:newProject.endDate||'',tasks:[]}]}));
+    setNewProject({name:'',areaId:null,startDate:'',endDate:'',description:''});setShowNewProject(false);
+  };
+  const updateProject=(id,u)=>setData(prev=>({...prev,projects:prev.projects.map(p=>p.id===id?{...p,...u}:p)}));
+  const updateArea=(id,u)=>setData(prev=>({...prev,areas:prev.areas.map(a=>a.id===id?{...a,...u}:a)}));
+  const deleteArea=id=>{setData(prev=>({...prev,areas:prev.areas.filter(a=>a.id!==id),projects:prev.projects.filter(p=>p.areaId!==id)}));setSelAreaId(null);};
+  const addArea=()=>{if(!newArea.name.trim())return;setData(prev=>({...prev,areas:[...prev.areas,{id:Date.now(),...newArea}]}));setNewArea({name:'',emoji:'📁',vision:'',color:'#6c63ff'});setShowNewArea(false);};
+  const openEditProject=proj=>setEditingProject({id:proj.id,name:proj.name,description:proj.description||'',startDate:proj.startDate||'',endDate:proj.endDate||''});
+  const saveEditProject=()=>{if(!editingProject?.name?.trim())return;updateProject(editingProject.id,{name:editingProject.name,description:editingProject.description,startDate:editingProject.startDate,endDate:editingProject.endDate});setEditingProject(null);};
+  const addInboxItem=()=>{if(!newInbox.trim())return;setData(prev=>({...prev,inbox:[...prev.inbox,{id:Date.now(),text:newInbox,timestamp:new Date().toISOString()}]}));setNewInbox('');setShowInboxCap(false);};
+  const updateInboxItem=id=>{if(!editInboxText.trim())return;setData(prev=>({...prev,inbox:prev.inbox.map(i=>i.id===id?{...i,text:editInboxText}:i)}));setEditInboxId(null);};
+  const deleteInboxItem=id=>setData(prev=>({...prev,inbox:prev.inbox.filter(i=>i.id!==id)}));
+  const assignInbox=(inboxId,projectId)=>{
+    const item=data.inbox.find(i=>i.id===inboxId);if(!item)return;
+    const today=todayStr();
+    setData(prev=>({...prev,projects:prev.projects.map(p=>p.id===projectId?{...p,tasks:[...p.tasks,{id:Date.now(),name:item.text,status:'pending',doDate:today,dueDate:today,note:'',subtasks:[]}]}:p),inbox:prev.inbox.filter(i=>i.id!==inboxId)}));
+    setAssignInboxId(null);
+  };
+  const exportData=()=>{const b=new Blob([JSON.stringify({...data,exportDate:new Date().toISOString()},null,2)],{type:'application/json'});const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`aptr-${todayStr()}.json`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);setShowMenu(false);};
+  const importData=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.areas&&d.projects&&d.inbox){setData({areas:d.areas,projects:d.projects,inbox:d.inbox});alert('✅ Importado');}else alert('❌ Formato inválido');}catch{alert('❌ Error');}};r.readAsText(f);if(e.target)e.target.value='';setShowMenu(false);};
+
+  const cardProps={onToggle:toggleTask,onEdit:openEditTask,onDelete:deleteTask,onNavigate:()=>setView('projects'),onToggleSubtask:toggleSubtask,onAddSubtask:addSubtask,onDeleteSubtask:deleteSubtask,onSaveNote:saveNote};
+  const todayLabel=(()=>{const s=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});return s.charAt(0).toUpperCase()+s.slice(1);})();
+
+  return(
+    <div className="root">
+      <style>{S}</style>
+
+      {/* HEADER */}
+      <header className="hdr">
+        <div className="hdr-in">
+          <div className="hdr-top">
+            <div className="logo">APT<span>R</span><span className="badge">2026</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:7,position:'relative'}}>
+              {overdue.length>0&&<span style={{fontSize:11,color:'var(--rd)',background:'var(--rdd)',border:'1px solid #ef444330',borderRadius:20,padding:'2px 8px',fontWeight:600}}>{overdue.length} vencidas</span>}
+              <button className="btn-icon" onClick={()=>setShowMenu(!showMenu)}><MoreVertical size={17}/></button>
+              {showMenu&&(
+                <>
+                  <div style={{position:'fixed',inset:0,zIndex:49}} onClick={()=>setShowMenu(false)}/>
+                  <div className="dd-menu">
+                    <button className="dd-item" onClick={exportData}><Download size={13}/> Exportar</button>
+                    <label className="dd-item" style={{cursor:'pointer'}}><Upload size={13}/> Importar<input type="file" accept=".json" onChange={importData} style={{display:'none'}}/></label>
+                    <div className="dd-div"/>
+                    <button className="dd-item" onClick={()=>{setData(getInitialData());setShowMenu(false);}}><Sparkles size={13}/> Sample data</button>
+                    <button className="dd-item danger" onClick={()=>{localStorage.removeItem('aptr-v13');setData(getInitialData());setShowMenu(false);}}><Trash2 size={13}/> Resetear</button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          <nav className="nav">
+            {[{id:'week',label:'Esta semana',ic:<Clock size={12}/>},{id:'areas',label:'Áreas',ic:<Target size={12}/>},{id:'projects',label:'Proyectos',ic:<Layers size={12}/>},{id:'tasks',label:'Tareas',ic:<CheckSquare size={12}/>},{id:'inbox',label:'Inbox',ic:<Inbox size={12}/>,badge:data.inbox.length||null}].map(t=>(
+              <button key={t.id} className={`nav-btn${view===t.id?' on':''}`} onClick={()=>{setView(t.id);setSelAreaId(null);setTaskFilter('all');}}>
+                {t.ic}{t.label}{t.badge!=null&&<span className="nav-pill">{t.badge}</span>}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      <main className="main">
+
+        {/* ── WEEK ── */}
+        {view==='week'&&(
+          <>
+            <div className="sec-hdr">
+              <div><h2 className="sec-title">Esta semana</h2><p className="sec-sub">{todayLabel}</p></div>
+              <div style={{display:'flex',gap:7}}>
+                <button className="btn btn-ghost" onClick={()=>setShowBatch(true)}><Copy size={13}/> Lote</button>
+                <button className="btn btn-pri" onClick={()=>setShowNewTask(true)}><Plus size={14}/> Tarea</button>
+              </div>
+            </div>
+            <div className="stats-row">
+              <div className="stat"><div className="stat-v">{weekTasks.filter(t=>t.status==='pending').length}</div><div className="stat-l">Pendientes</div></div>
+              <div className="stat"><div className="stat-v" style={{color:'var(--gr)'}}>{weekTasks.filter(t=>t.status==='done').length}</div><div className="stat-l">Completadas</div></div>
+              <div className="stat"><div className="stat-v" style={{color:overdue.length>0?'var(--rd)':'var(--tx3)'}}>{overdue.length}</div><div className="stat-l">Vencidas</div></div>
+            </div>
+            {overdue.length>0&&(
+              <div style={{marginBottom:22}}>
+                <div style={{display:'flex',alignItems:'center',gap:7,marginBottom:9,paddingBottom:7,borderBottom:'1px solid #ef444330'}}>
+                  <AlertCircle size={12} style={{color:'var(--rd)'}}/><span style={{fontSize:11,fontWeight:700,letterSpacing:'.5px',textTransform:'uppercase',color:'var(--rd)'}}>Vencidas · {overdue.length}</span>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',gap:7}}>{overdue.map(t=><TaskCard key={t.id} task={t} {...cardProps}/>)}</div>
+              </div>
+            )}
+            {weekTasks.length>0&&(
+              <div>
+                {overdue.length>0&&<div style={{display:'flex',alignItems:'center',gap:7,marginBottom:9,paddingBottom:7,borderBottom:'1px solid var(--bd)'}}><Clock size={12} style={{color:'var(--tx3)'}}/><span style={{fontSize:11,fontWeight:700,letterSpacing:'.5px',textTransform:'uppercase',color:'var(--tx3)'}}>Esta semana · {weekTasks.length}</span></div>}
+                <div style={{display:'flex',flexDirection:'column',gap:7}}>{weekTasks.map(t=><TaskCard key={t.id} task={t} {...cardProps}/>)}</div>
+              </div>
+            )}
+            {overdue.length===0&&weekTasks.length===0&&<div className="empty"><CheckCircle2 size={38} style={{margin:'0 auto 10px',opacity:.2}}/><div className="empty-title">Todo al día</div><p>Sin tareas vencidas ni para esta semana</p></div>}
+          </>
+        )}
+
+        {/* ── TASKS ── */}
+        {view==='tasks'&&(
+          <>
+            <div className="sec-hdr">
+              <div><h2 className="sec-title">Todas las tareas</h2><p className="sec-sub">{allTasks.length} tareas en total</p></div>
+              <div style={{display:'flex',gap:7}}>
+                <button className="btn btn-ghost" onClick={()=>setShowBatch(true)}><Copy size={13}/> Lote</button>
+                <button className="btn btn-pri" onClick={()=>setShowNewTask(true)}><Plus size={14}/> Tarea</button>
+              </div>
+            </div>
+            <div className="filters">
+              {[{id:'all',l:'Todas',c:taskCounts.all},{id:'pending',l:'Pendientes',c:taskCounts.pending},{id:'done',l:'Completadas',c:taskCounts.done}].map(f=>(
+                <button key={f.id} className={`fp${taskFilter===f.id?' on':''}`} onClick={()=>setTaskFilter(f.id)}>{f.l} {f.c}</button>
+              ))}
+            </div>
+            <div style={{display:'flex',flexDirection:'column',gap:7}}>
+              {displayTasks.length===0?<div className="empty"><Circle size={38} style={{margin:'0 auto 10px',opacity:.2}}/><div className="empty-title">Sin tareas</div></div>:displayTasks.map(t=><TaskCard key={t.id} task={t} {...cardProps}/>)}
+            </div>
+          </>
+        )}
+
+        {/* ── AREAS ── */}
+        {view==='areas'&&(
+          selAreaId?(()=>{
+            const area=data.areas.find(a=>a.id===selAreaId);if(!area)return null;
+            const ap=projects.filter(p=>p.areaId===selAreaId);
+            const prog=getAreaProg(selAreaId);
+            return(
+              <div>
+                <button className="back-btn" onClick={()=>setSelAreaId(null)}><ArrowLeft size={14}/> Áreas</button>
+                <div style={{background:'var(--sf2)',border:'1px solid var(--bd)',borderRadius:'var(--r)',padding:'18px 22px',marginBottom:22,position:'relative',overflow:'hidden'}}>
+                  <div style={{position:'absolute',top:0,left:0,right:0,height:4,background:area.color}}/>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+                    <div style={{flex:1}}>
+                      <span style={{fontSize:36,display:'block',marginBottom:7}}>{area.emoji}</span>
+                      {editingAreaId===selAreaId?(
+                        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+                          <div style={{display:'flex',gap:9}}>
+                            <input className="finput" style={{width:52,textAlign:'center',fontSize:20}} value={area.emoji} onChange={e=>updateArea(selAreaId,{emoji:e.target.value})}/>
+                            <input className="finput" style={{flex:1}} value={area.name} onChange={e=>updateArea(selAreaId,{name:e.target.value})}/>
+                          </div>
+                          <textarea className="finput" rows={2} value={area.vision} onChange={e=>updateArea(selAreaId,{vision:e.target.value})}/>
+                          <input type="color" value={area.color} onChange={e=>updateArea(selAreaId,{color:e.target.value})} style={{height:34,borderRadius:6,border:'1px solid var(--bdh)',cursor:'pointer',width:56}}/>
+                          <div style={{display:'flex',gap:8}}>
+                            <button className="btn btn-pri btn-sm" onClick={()=>setEditingAreaId(null)}>Guardar</button>
+                            <button className="btn btn-danger btn-sm" onClick={()=>deleteArea(selAreaId)}>Eliminar área</button>
+                          </div>
+                        </div>
+                      ):(
+                        <><div style={{fontFamily:'Syne,system-ui,sans-serif',fontSize:22,fontWeight:800,marginBottom:3}}>{area.name}</div><div style={{fontSize:13,color:'var(--tx2)',fontStyle:'italic'}}>{area.vision}</div></>
+                      )}
+                    </div>
+                    {editingAreaId!==selAreaId&&<button className="btn-icon" onClick={()=>setEditingAreaId(selAreaId)}><Edit2 size={15}/></button>}
+                  </div>
+                  <div style={{marginTop:14,display:'flex',alignItems:'center',gap:9}}>
+                    <div className="pbar" style={{height:5}}><div className="pfill" style={{width:`${prog}%`,backgroundColor:getProgressColor(prog)}}/></div>
+                    <span style={{fontSize:12,color:'var(--tx2)',minWidth:36}}>{prog}%</span>
+                  </div>
+                </div>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+                  <h3 style={{fontFamily:'Syne,system-ui,sans-serif',fontSize:15,fontWeight:700,margin:0}}>Proyectos ({ap.length})</h3>
+                  <button className="btn btn-ghost btn-sm" onClick={()=>{setNewProject({...newProject,areaId:selAreaId});setShowNewProject(true);}}><Plus size={12}/> Proyecto</button>
+                </div>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:10}}>
+                  {ap.map(p=>{const d=p.tasks.filter(t=>t.status==='done').length,tot=p.tasks.length,pct=tot>0?Math.round((d/tot)*100):0,pc=getProgressColor(pct);return(
+                    <div key={p.id} style={{background:'var(--sf2)',border:'1px solid var(--bd)',borderRadius:'var(--r)',overflow:'hidden',position:'relative',cursor:'pointer',transition:'border-color .15s'}} onClick={()=>setView('projects')}>
+                      <div style={{position:'absolute',top:0,left:0,right:0,height:3,background:area.color}}/>
+                      <div style={{padding:'15px 15px 11px'}}>
+                        <div style={{fontFamily:'Syne,system-ui,sans-serif',fontSize:14,fontWeight:700,marginBottom:10}}>{p.name}</div>
+                        <div style={{display:'flex',alignItems:'center',gap:7,marginBottom:8}}>
+                          <div style={{flex:1,height:5,background:'var(--sf3)',borderRadius:3,overflow:'hidden'}}><div style={{height:'100%',borderRadius:3,background:pc,width:`${pct}%`,transition:'width .5s ease'}}/></div>
+                          <span style={{fontFamily:'Syne,system-ui,sans-serif',fontSize:12,fontWeight:700,color:pc}}>{pct}%</span>
+                        </div>
+                        <span style={{fontSize:11,color:'var(--tx3)'}}>{d}/{tot} tareas</span>
+                      </div>
+                    </div>
+                  );})}
+                </div>
+              </div>
+            );
+          })():(
+            <div>
+              <div className="sec-hdr">
+                <div><h2 className="sec-title">Áreas de vida</h2><p className="sec-sub">{data.areas.length} áreas activas</p></div>
+                <button className="btn btn-pri" onClick={()=>setShowNewArea(true)}><Plus size={14}/> Nueva área</button>
+              </div>
+              <div className="areas-grid">
+                {data.areas.map(area=>{const prog=getAreaProg(area.id);return(
+                  <div key={area.id} className="area-card" style={{'--area-color':area.color}} onClick={()=>setSelAreaId(area.id)}>
+                    <span className="area-emoji">{area.emoji}</span>
+                    <div className="area-name">{area.name}</div>
+                    <div className="area-vision">{area.vision}</div>
+                    <div className="area-stats">
+                      <div className="pbar"><div className="pfill" style={{width:`${prog}%`,backgroundColor:getProgressColor(prog)}}/></div>
+                      <span style={{fontSize:10,color:'var(--tx3)',whiteSpace:'nowrap'}}>{projects.filter(p=>p.areaId===area.id).length} proy.</span>
+                    </div>
+                  </div>
+                );})}
+              </div>
+            </div>
+          )
+        )}
+
+        {/* ── PROJECTS ── */}
+        {view==='projects'&&(
+          <div>
+            <div className="sec-hdr">
+              <div><h2 className="sec-title">Proyectos</h2><p className="sec-sub">{projects.length} en {yr}</p></div>
+              <div style={{display:'flex',gap:7}}>
+                <button className="btn btn-ghost" onClick={()=>setShowBatch(true)}><Copy size={13}/> Lote</button>
+                <button className="btn btn-pri" onClick={()=>setShowNewProject(true)}><Plus size={14}/> Proyecto</button>
+              </div>
+            </div>
+            {data.areas.map(area=>{
+              const ap=projects.filter(p=>p.areaId===area.id);
+              if(!ap.length)return null;
+              return(
+                <div key={area.id} className="pv-grp">
+                  <div className="pv-grp-hdr">
+                    <span className="pv-grp-dot" style={{background:area.color}}/>
+                    <span className="pv-grp-name">{area.emoji} {area.name}</span>
+                    <span style={{fontSize:11,color:'var(--tx3)'}}>{ap.length}</span>
+                  </div>
+                  {ap.map(project=>(
+                    <PVProjectCard key={project.id} project={project} area={area}
+                      onToggleTask={toggleTask} onEditTask={openEditTask}
+                      onDeleteTask={deleteTask} onOpenSheet={setPvSheet}
+                      onAddInlineTask={addInlineTask} onEditProject={openEditProject}
+                      onToggleSubtask={toggleSubtask} onAddSubtask={addSubtask} onDeleteSubtask={deleteSubtask}/>
+                  ))}
+                </div>
+              );
+            })}
+            <BottomSheet task={pvSheet} onClose={()=>setPvSheet(null)} onEdit={openEditTask} onDelete={deleteTask}/>
+          </div>
+        )}
+
+        {/* ── INBOX ── */}
+        {view==='inbox'&&(
+          <div>
+            <div className="sec-hdr">
+              <div><h2 className="sec-title">Inbox</h2><p className="sec-sub">Capturá ideas, procesalas después</p></div>
+              <button className="btn btn-pri" onClick={()=>{setShowInboxCap(true);setTimeout(()=>inboxRef.current?.focus(),50);}}><Plus size={14}/> Agregar</button>
+            </div>
+            {showInboxCap&&(
+              <div className="ic">
+                <input ref={inboxRef} value={newInbox} onChange={e=>setNewInbox(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')addInboxItem();if(e.key==='Escape')setShowInboxCap(false);}} placeholder="¿Qué querés capturar? (Enter)"/>
+                <button className="btn btn-pri btn-sm" onClick={addInboxItem}>Guardar</button>
+                <button className="btn-icon" onClick={()=>setShowInboxCap(false)}><X size={15}/></button>
+              </div>
+            )}
+            {data.inbox.length===0?(
+              <div className="empty"><Inbox size={38} style={{margin:'0 auto 10px',opacity:.2}}/><div className="empty-title">Inbox vacío</div><p>Usalo para captura rápida de ideas</p></div>
+            ):(
+              <div style={{display:'flex',flexDirection:'column',gap:7}}>
+                {data.inbox.map(item=>(
+                  <div key={item.id} className="ib-card">
+                    {editInboxId===item.id?(
+                      <div style={{display:'flex',flexDirection:'column',gap:9}}>
+                        <textarea className="finput" value={editInboxText} onChange={e=>setEditInboxText(e.target.value)} rows={2} autoFocus/>
+                        <div style={{display:'flex',gap:7}}>
+                          <button className="btn btn-pri btn-sm" onClick={()=>updateInboxItem(item.id)}>Guardar</button>
+                          <button className="btn btn-ghost btn-sm" onClick={()=>setEditInboxId(null)}>Cancelar</button>
+                        </div>
+                      </div>
+                    ):(
+                      <>
+                        <div className="ib-text">{item.text}</div>
+                        <div className="ib-foot">
+                          <span className="ib-ts">{new Date(item.timestamp).toLocaleDateString('es-AR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span>
+                          <div style={{display:'flex',gap:4}}>
+                            <button className="btn btn-ghost btn-sm" onClick={()=>setAssignInboxId(assignInboxId===item.id?null:item.id)}><Layers size={11}/> Asignar</button>
+                            <button className="btn-icon" onClick={()=>{setEditInboxId(item.id);setEditInboxText(item.text);}}><Edit2 size={13}/></button>
+                            <button className="btn-icon" style={{color:'var(--rd)'}} onClick={()=>deleteInboxItem(item.id)}><Trash2 size={13}/></button>
+                          </div>
+                        </div>
+                        {assignInboxId===item.id&&(
+                          <div style={{marginTop:11,paddingTop:11,borderTop:'1px solid var(--bd)'}}>
+                            <div style={{fontSize:10,fontWeight:600,letterSpacing:'.6px',textTransform:'uppercase',color:'var(--tx3)',marginBottom:9}}>Asignar a proyecto</div>
+                            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:5,maxHeight:160,overflowY:'auto'}}>
+                              {projects.map(p=>{const ar=data.areas.find(a=>a.id===p.areaId);return(
+                                <button key={p.id} style={{background:'var(--sf3)',border:'1px solid var(--bd)',borderRadius:7,padding:'9px 10px',cursor:'pointer',textAlign:'left',transition:'border-color .15s'}}
+                                  onMouseEnter={e=>e.currentTarget.style.borderColor='var(--ac)'}
+                                  onMouseLeave={e=>e.currentTarget.style.borderColor='var(--bd)'}
+                                  onClick={()=>assignInbox(item.id,p.id)}>
+                                  <div style={{fontSize:10,color:'var(--tx3)',marginBottom:2,display:'flex',gap:3,alignItems:'center'}}><span style={{width:5,height:5,borderRadius:'50%',background:ar?.color,display:'inline-block'}}/>{ar?.emoji} {ar?.name}</div>
+                                  <div style={{fontSize:12,fontWeight:500,color:'var(--tx)'}}>{p.name}</div>
+                                </button>
+                              );})}
+                            </div>
+                            <button className="btn-icon" style={{marginTop:7,fontSize:12,color:'var(--tx3)'}} onClick={()=>setAssignInboxId(null)}>Cancelar</button>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+
+      {/* ── MODALS ── */}
+      {showBatch&&<BatchModal projects={projects} areas={data.areas} onClose={()=>setShowBatch(false)} onAdd={addBatchTasks}/>}
+
+      {editingProject&&(
+        <Modal title="Editar proyecto" onClose={()=>setEditingProject(null)}>
+          <div><label className="flabel">Nombre</label><input className="finput" autoFocus value={editingProject.name} onChange={e=>setEditingProject({...editingProject,name:e.target.value})} onKeyDown={e=>e.key==='Enter'&&saveEditProject()}/></div>
+          <div><label className="flabel">Descripción</label><textarea className="finput" rows={3} value={editingProject.description} onChange={e=>setEditingProject({...editingProject,description:e.target.value})}/></div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div><label className="flabel">Inicio</label><input type="date" className="finput" value={editingProject.startDate} onChange={e=>setEditingProject({...editingProject,startDate:e.target.value})}/></div>
+            <div><label className="flabel">Fin</label><input type="date" className="finput" value={editingProject.endDate} onChange={e=>setEditingProject({...editingProject,endDate:e.target.value})}/></div>
+          </div>
+          <button className="btn btn-pri" style={{width:'100%',justifyContent:'center',padding:'11px'}} onClick={saveEditProject}>Guardar</button>
+          <button className="btn btn-danger" style={{width:'100%',justifyContent:'center',padding:'9px'}} onClick={()=>{
+              setData(prev=>({...prev,projects:prev.projects.filter(p=>String(p.id)!==String(editingProject.id))}));
+              setEditingProject(null);
+          }}><Trash2 size={12}/> Eliminar proyecto</button>
+        </Modal>
+      )}
+
+      {showNewTask&&(
+        <Modal title="Nueva tarea" onClose={()=>setShowNewTask(false)}>
+          <div><label className="flabel">Nombre</label><input className="finput" autoFocus value={newTask.name} onChange={e=>setNewTask({...newTask,name:e.target.value})} onKeyDown={e=>e.key==='Enter'&&addTask()} placeholder="¿Qué hay que hacer?"/></div>
+          <div><label className="flabel">Proyecto</label>
+            <select className="finput fselect" value={newTask.projectId||''} onChange={e=>setNewTask({...newTask,projectId:Number(e.target.value)})}>
+              <option value="">Seleccionar proyecto...</option>
+              {projects.map(p=>{const a=data.areas.find(a=>a.id===p.areaId);return<option key={p.id} value={p.id}>{a?.emoji} {p.name}</option>;})}
+            </select>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div><label className="flabel">Inicio</label><input type="date" className="finput" value={newTask.doDate} onChange={e=>setNewTask({...newTask,doDate:e.target.value})}/></div>
+            <div><label className="flabel">Límite</label><input type="date" className="finput" value={newTask.dueDate} onChange={e=>setNewTask({...newTask,dueDate:e.target.value})}/></div>
+          </div>
+          <div><label className="flabel">Nota</label><textarea className="finput" rows={2} value={newTask.note} onChange={e=>setNewTask({...newTask,note:e.target.value})} placeholder="Contexto, link…"/></div>
+          <RecurSection
+            recur={newTask.recur} setRecur={v=>setNewTask({...newTask,recur:v})}
+            recurMode={newTask.recurMode} setRecurMode={v=>setNewTask({...newTask,recurMode:v})}
+            recurEnd={newTask.recurEnd} setRecurEnd={v=>setNewTask({...newTask,recurEnd:v})}/>
+          <button className="btn btn-pri" style={{width:'100%',justifyContent:'center',padding:'11px'}} onClick={addTask}>
+            {newTask.recur&&newTask.recurMode==='allAtOnce'&&newTask.recurEnd?'Crear todas las instancias':'Crear tarea'}
+          </button>
+        </Modal>
+      )}
+
+      {showNewProject&&(
+        <Modal title="Nuevo proyecto" onClose={()=>setShowNewProject(false)}>
+          <div><label className="flabel">Nombre</label><input className="finput" autoFocus value={newProject.name} onChange={e=>setNewProject({...newProject,name:e.target.value})} placeholder="Nombre del proyecto..."/></div>
+          <div><label className="flabel">Descripción</label><textarea className="finput" rows={2} value={newProject.description} onChange={e=>setNewProject({...newProject,description:e.target.value})} placeholder="Descripción opcional..."/></div>
+          <div><label className="flabel">Área</label>
+            <select className="finput fselect" value={newProject.areaId||''} onChange={e=>setNewProject({...newProject,areaId:Number(e.target.value)})}>
+              <option value="">Seleccionar área...</option>
+              {data.areas.map(a=><option key={a.id} value={a.id}>{a.emoji} {a.name}</option>)}
+            </select>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div><label className="flabel">Inicio</label><input type="date" className="finput" value={newProject.startDate} onChange={e=>setNewProject({...newProject,startDate:e.target.value})}/></div>
+            <div><label className="flabel">Fin</label><input type="date" className="finput" value={newProject.endDate} onChange={e=>setNewProject({...newProject,endDate:e.target.value})}/></div>
+          </div>
+          <button className="btn btn-pri" style={{width:'100%',justifyContent:'center',padding:'11px'}} onClick={addProject}>Crear proyecto</button>
+        </Modal>
+      )}
+
+      {showNewArea&&(
+        <Modal title="Nueva área" onClose={()=>setShowNewArea(false)}>
+          <div style={{display:'flex',gap:9}}>
+            <div><label className="flabel">Emoji</label><input className="finput" style={{width:52,textAlign:'center',fontSize:20}} value={newArea.emoji} onChange={e=>setNewArea({...newArea,emoji:e.target.value})}/></div>
+            <div style={{flex:1}}><label className="flabel">Nombre</label><input className="finput" autoFocus value={newArea.name} onChange={e=>setNewArea({...newArea,name:e.target.value})} placeholder="Nombre del área..."/></div>
+          </div>
+          <div><label className="flabel">Visión</label><textarea className="finput" rows={3} value={newArea.vision} onChange={e=>setNewArea({...newArea,vision:e.target.value})} placeholder="¿Qué querés lograr?"/></div>
+          <div><label className="flabel">Color</label><input type="color" value={newArea.color} onChange={e=>setNewArea({...newArea,color:e.target.value})} style={{height:38,width:'100%',borderRadius:7,border:'1px solid var(--bdh)',cursor:'pointer',background:'var(--sf3)'}}/></div>
+          <button className="btn btn-pri" style={{width:'100%',justifyContent:'center',padding:'11px'}} onClick={addArea}>Crear área</button>
+        </Modal>
+      )}
+
+      {showEditTask&&(
+        <Modal title="Editar tarea" onClose={()=>setShowEditTask(false)}>
+          <div><label className="flabel">Nombre</label><input className="finput" autoFocus value={editTaskForm.name} onChange={e=>setEditTaskForm({...editTaskForm,name:e.target.value})} onKeyDown={e=>e.key==='Enter'&&updateTask()}/></div>
+          <div><label className="flabel">Proyecto</label>
+            <select className="finput fselect" value={editTaskForm.projectId||''} onChange={e=>setEditTaskForm({...editTaskForm,projectId:Number(e.target.value)})}>
+              <option value="">Seleccionar...</option>
+              {projects.map(p=>{const a=data.areas.find(a=>a.id===p.areaId);return<option key={p.id} value={p.id}>{a?.emoji} {p.name}</option>;})}
+            </select>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div><label className="flabel">Inicio</label><input type="date" className="finput" value={editTaskForm.doDate} onChange={e=>setEditTaskForm({...editTaskForm,doDate:e.target.value})}/></div>
+            <div><label className="flabel">Límite</label><input type="date" className="finput" value={editTaskForm.dueDate} onChange={e=>setEditTaskForm({...editTaskForm,dueDate:e.target.value})}/></div>
+          </div>
+          <div><label className="flabel">Nota</label><textarea className="finput" rows={3} value={editTaskForm.note} onChange={e=>setEditTaskForm({...editTaskForm,note:e.target.value})} placeholder="Contexto, links…"/></div>
+          <RecurSection
+            recur={editTaskForm.recur} setRecur={v=>setEditTaskForm({...editTaskForm,recur:v})}
+            recurMode={editTaskForm.recurMode} setRecurMode={v=>setEditTaskForm({...editTaskForm,recurMode:v})}
+            recurEnd={editTaskForm.recurEnd} setRecurEnd={v=>setEditTaskForm({...editTaskForm,recurEnd:v})}/>
+          <button className="btn btn-pri" style={{width:'100%',justifyContent:'center',padding:'11px'}} onClick={updateTask}>Guardar cambios</button>
+          <button className="btn btn-danger" style={{width:'100%',justifyContent:'center',padding:'9px'}} onClick={()=>{deleteTask(editTaskForm.id);setShowEditTask(false);}}><Trash2 size={12}/> Eliminar tarea</button>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<APTRPlanner/>);
+</script>
+</body>
+</html>
