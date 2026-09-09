@@ -897,6 +897,7 @@ function APTRPlanner(){
   let _idCounter=0;
   const uid=()=>Date.now()*10000+(++_idCounter);
   const _skipFbRef=useRef(false);
+  const _mountedRef=useRef(false);
   const _fbSaveTimer=useRef(null);
   const _fbSynced=useRef(false);
   const _localPending=useRef(false);
@@ -954,12 +955,18 @@ function APTRPlanner(){
 
   // Save to localStorage + Firebase (debounced)
   useEffect(()=>{
+    const fromFb=_skipFbRef.current;
+    const firstRun=!_mountedRef.current;
+    _mountedRef.current=true;
     try{
       const json=JSON.stringify(data);
       localStorage.setItem('aptr-v14',json);
       localStorage.setItem('aptr-v14-backup',json);
+      // marca de tiempo de la ultima edicion LOCAL (en segundos, igual que _ts de Firestore)
+      if(!fromFb&&!firstRun)localStorage.setItem('aptr-v14-ts',String(Math.floor(Date.now()/1000)));
     }catch(e){console.error('APTR: error guardando',e);}
-    if(_skipFbRef.current){_skipFbRef.current=false;return;}
+    // en el primer render todavia no cargo Firestore: no pisar la nube con lo local
+    if(fromFb||firstRun){_skipFbRef.current=false;if(_fbSaveTimer.current){clearTimeout(_fbSaveTimer.current);_fbSaveTimer.current=null;}return;}
     _localPending.current=true;
     if(_fbSaveTimer.current)clearTimeout(_fbSaveTimer.current);
     _fbSaveTimer.current=setTimeout(()=>{
@@ -986,7 +993,13 @@ function APTRPlanner(){
         if(!localTs||fbTs>Number(localTs)){
           _skipFbRef.current=true;
           setData({areas:fbData.areas,projects:fbData.projects,inbox:fbData.inbox||[]});
+        } else {
+          // lo local quedo mas nuevo que la nube: lo subo yo
+          window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[]});
         }
+      } else {
+        // no hay documento todavia: subo lo local
+        window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[]});
       }
       setSyncStatus('synced');
       _fbSynced.current=true;
