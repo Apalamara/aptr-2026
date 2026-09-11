@@ -440,6 +440,43 @@ const S=`
 .wr-task{font-size:13px;color:var(--tx2);padding:4px 0;display:flex;align-items:center;gap:6px;}
 `;
 
+// ── Circuito de cobro Open Pay (área Finanzas) ──────────────────────────
+const FINANZAS_PROJECT_ID=1;
+const OPENPAY_TASKS=[
+  {id:'fin-op-pedir',base:'Pedir transferencia de Open Pay a mi hermana',doDay:1,dueDay:9},
+  {id:'fin-op-banco',base:'Transferirme la plata a mi banco',doDay:3,dueDay:11},
+];
+// Arranca en el primer mes en que todavía se llega a pedir la transferencia
+function firstOpenPayMonth(){
+  const n=new Date();let y=n.getFullYear(),m=n.getMonth();
+  if(n.getDate()>OPENPAY_TASKS[0].dueDay){m++;if(m>11){m=0;y++;}}
+  return{y,m};
+}
+function buildOpenPayTasks(){
+  const{y,m}=firstOpenPayMonth();
+  const iso=day=>`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  return OPENPAY_TASKS.map(t=>({id:t.id,name:`${t.base} 1`,status:'pending',doDate:iso(t.doDay),dueDate:iso(t.dueDay),note:'',subtasks:[],recur:'monthly',recurMode:'onComplete',recurBase:t.base,recurIndex:1}));
+}
+
+// ── Migraciones de datos (corren una sola vez, después de sincronizar) ──
+const MIGRATIONS=[
+  {id:'fin-openpay-v1',apply:d=>{
+    const proj=d.projects.find(p=>idEq(p.id,FINANZAS_PROJECT_ID));
+    if(!proj)return d;
+    const nuevas=buildOpenPayTasks().filter(nt=>!proj.tasks.some(t=>idEq(t.id,nt.id)||t.recurBase===nt.recurBase));
+    if(!nuevas.length)return d;
+    return{...d,projects:d.projects.map(p=>idEq(p.id,FINANZAS_PROJECT_ID)?{...p,tasks:[...p.tasks,...nuevas]}:p)};
+  }},
+];
+function applyMigrations(d){
+  const done=d.migrations||[];
+  const pend=MIGRATIONS.filter(m=>!done.includes(m.id));
+  if(!pend.length)return d;
+  let out=d;
+  pend.forEach(m=>{out=m.apply(out);});
+  return{...out,migrations:[...done,...pend.map(m=>m.id)]};
+}
+
 const getInitialData=()=>{const yr=new Date().getFullYear();return({
   areas:[
     {id:1,name:'Finanzas',emoji:'💰',vision:'Ordenar y optimizar mis finanzas personales',color:'#10B981'},
@@ -463,6 +500,7 @@ const getInitialData=()=>{const yr=new Date().getFullYear();return({
       {id:10,name:'Crear facturas 10/12',status:'pending',doDate:'2026-10-15',dueDate:'2026-10-31',note:'',subtasks:[]},
       {id:11,name:'Crear facturas 11/12',status:'pending',doDate:'2026-11-15',dueDate:'2026-11-30',note:'',subtasks:[]},
       {id:12,name:'Crear facturas 12/12',status:'pending',doDate:'2026-12-15',dueDate:'2026-12-31',note:'',subtasks:[]},
+      ...buildOpenPayTasks(),
     ]},
     {id:3,areaId:2,name:'Letters to God 2026',description:'Escribir 12 cartas a Dios durante el año',startDate:'2026-01-01',endDate:'2026-12-31',year:yr,tasks:[
       {id:30,name:'Escribir carta a Dios 1/12',status:'done',doDate:'2026-01-15',dueDate:'2026-01-31',note:'',subtasks:[]},
@@ -527,6 +565,7 @@ const getInitialData=()=>{const yr=new Date().getFullYear();return({
     ]},
   ],
   inbox:[],
+  migrations:[],
 });};
 
 
@@ -972,7 +1011,7 @@ function APTRPlanner(){
     _fbSaveTimer.current=setTimeout(()=>{
       if(window._fb){
         setSyncStatus('saving');
-        window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[]}).then(()=>{setSyncStatus('synced');setTimeout(()=>{_localPending.current=false;},2000);}).catch(()=>{setSyncStatus('error');_localPending.current=false;});
+        window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[],migrations:data.migrations||[]}).then(()=>{setSyncStatus('synced');setTimeout(()=>{_localPending.current=false;},2000);}).catch(()=>{setSyncStatus('error');_localPending.current=false;});
       } else {_localPending.current=false;}
     },800);
   },[data]);
@@ -992,14 +1031,14 @@ function APTRPlanner(){
         const fbTs=fbData._ts?.seconds||0;
         if(!localTs||fbTs>Number(localTs)){
           _skipFbRef.current=true;
-          setData({areas:fbData.areas,projects:fbData.projects,inbox:fbData.inbox||[]});
+          setData({areas:fbData.areas,projects:fbData.projects,inbox:fbData.inbox||[],migrations:fbData.migrations||[]});
         } else {
           // lo local quedo mas nuevo que la nube: lo subo yo
-          window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[]});
+          window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[],migrations:data.migrations||[]});
         }
       } else {
         // no hay documento todavia: subo lo local
-        window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[]});
+        window._fb.save({areas:data.areas,projects:data.projects,inbox:data.inbox||[],migrations:data.migrations||[]});
       }
       setSyncStatus('synced');
       _fbSynced.current=true;
@@ -1012,12 +1051,21 @@ function APTRPlanner(){
           const current=JSON.stringify({areas:prev.areas,projects:prev.projects,inbox:prev.inbox||[]});
           if(incoming===current)return prev;
           setSyncStatus('synced');
-          return{areas:snap.areas,projects:snap.projects,inbox:snap.inbox||[]};
+          return{areas:snap.areas,projects:snap.projects,inbox:snap.inbox||[],migrations:snap.migrations||prev.migrations||[]};
         });
       });
     }).catch(()=>setSyncStatus('offline'));
     return()=>{if(unsub)unsub();};
   },[]);
+
+  // Migraciones: corren una sola vez por dato, recién después de sincronizar
+  const _migDone=useRef(false);
+  useEffect(()=>{
+    if(_migDone.current)return;
+    if(window._fb&&syncStatus!=='synced'&&syncStatus!=='offline')return;
+    _migDone.current=true;
+    setData(prev=>applyMigrations(prev));
+  },[syncStatus]);
 
   useEffect(()=>{
     const handleKey=e=>{
@@ -1120,8 +1168,10 @@ function APTRPlanner(){
       const newStatus=origTask.status==='done'?'pending':'done';
       if(newStatus==='done'&&origTask.recur&&origTask.recurMode==='onComplete'){
         const nextDate=nextRecurDate(origTask.dueDate,origTask.recur);
+        // preserva el rango hacer→vencer de la instancia actual
+        const nextDo=origTask.doDate?nextRecurDate(origTask.doDate,origTask.recur):nextDate;
         const idx=(origTask.recurIndex||1)+1;
-        newTasks=[...newTasks,{id:uid(),name:`${origTask.recurBase||origTask.name.replace(/ \d+$/,'')} ${idx}`,status:'pending',doDate:nextDate,dueDate:nextDate,note:'',subtasks:[],recur:origTask.recur,recurMode:'onComplete',recurBase:origTask.recurBase||origTask.name,recurIndex:idx}];
+        newTasks=[...newTasks,{id:uid(),name:`${origTask.recurBase||origTask.name.replace(/ \d+$/,'')} ${idx}`,status:'pending',doDate:nextDo,dueDate:nextDate,note:'',subtasks:[],recur:origTask.recur,recurMode:'onComplete',recurBase:origTask.recurBase||origTask.name,recurIndex:idx}];
       }
       return{...p,tasks:newTasks};
     });
