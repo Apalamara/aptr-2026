@@ -1123,12 +1123,6 @@ function APTRPlanner(){
     return result;
   },[allTasks]);
 
-  const weekTasks=useMemo(()=>{
-    const today=new Date();today.setHours(0,0,0,0);
-    const we=new Date(today);we.setDate(today.getDate()+7);
-    return allTasks.filter(t=>{const d=new Date(t.dueDate+'T00:00:00');d.setHours(0,0,0,0);return d>=today&&d<=we;}).sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
-  },[allTasks]);
-
   const overdue=useMemo(()=>{
     const today=new Date();today.setHours(0,0,0,0);
     return allTasks
@@ -1150,24 +1144,20 @@ function APTRPlanner(){
   const displayTasks=useMemo(()=>{
     let filtered;
     if(taskFilter==='open')filtered=openTasks;
-    else if(taskFilter==="overdue")filtered=overdue;
-    else if(taskFilter==='week')filtered=weekTasks.filter(t=>t.status!=='done');
     else if(taskFilter==='done')filtered=allTasks.filter(t=>t.status==='done');
     else filtered=allTasks;
     if(searchQuery.trim()){const q=searchQuery.toLowerCase();filtered=filtered.filter(t=>t.name.toLowerCase().includes(q)||(t.note||'').toLowerCase().includes(q)||(t.projectName||'').toLowerCase().includes(q));}
-    // vencidas y esta semana ya vienen ordenadas por fecha ascendente
+    // 'abiertas' ya viene ordenada; 'todas' y 'completadas' van de mas nueva a mas vieja
     if(taskFilter==='all'||taskFilter==='done')return [...filtered].sort((a,b)=>new Date(b.doDate)-new Date(a.doDate));
     return filtered;
-  },[overdue,weekTasks,allTasks,openTasks,taskFilter,searchQuery]);
+  },[allTasks,openTasks,taskFilter,searchQuery]);
 
   const taskCounts=useMemo(()=>({
     open:openTasks.length,
-    overdue:overdue.length,
-    week:weekTasks.filter(t=>t.status!=='done').length,
     all:allTasks.length,
     pending:allTasks.filter(t=>t.status==='pending').length,
     done:allTasks.filter(t=>t.status==='done').length,
-  }),[overdue,weekTasks,allTasks,openTasks]);
+  }),[allTasks,openTasks]);
 
   // projects filtered for projects view
   const filteredProjects=useMemo(()=>{
@@ -1308,8 +1298,8 @@ function APTRPlanner(){
               {searchQuery&&<button className="btn-icon" onClick={()=>setSearchQuery('')} style={{padding:2}}><X size={13}/></button>}
             </div>
             <div className="filters">
-              {[{id:'open',l:'Abiertas',c:taskCounts.open},{id:'overdue',l:'Vencidas',c:taskCounts.overdue},{id:'week',l:'Esta semana',c:taskCounts.week},{id:'all',l:'Todas',c:taskCounts.all},{id:'done',l:'Completadas',c:taskCounts.done}].map(f=>(
-                <button key={f.id} className={`fp${taskFilter===f.id?' on':''}${f.id==='overdue'&&f.c>0&&taskFilter!=='overdue'?' fp-alert':''}`} onClick={()=>setTaskFilter(f.id)}>{f.l} {f.c}</button>
+              {[{id:'open',l:'Abiertas',c:taskCounts.open},{id:'all',l:'Todas',c:taskCounts.all},{id:'done',l:'Completadas',c:taskCounts.done}].map(f=>(
+                <button key={f.id} className={`fp${taskFilter===f.id?' on':''}`} onClick={()=>setTaskFilter(f.id)}>{f.l} {f.c}</button>
               ))}
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:7}}>
