@@ -1405,17 +1405,16 @@ function APTRPlanner(){
             {data.areas.map(area=>{
               const ap=filteredProjects.filter(p=>idEq(p.areaId,area.id));
               if(!ap.length)return null;
-              const grouped=ap.length>=2;
               return(
                 <div key={area.id} className="pv-grp">
-                  {grouped&&<div className="pv-grp-hdr"><span className="pv-grp-dot" style={{background:area.color}}/><span className="pv-grp-name">{area.emoji} {area.name}</span><span style={{fontSize:11,color:'var(--tx3)'}}>{ap.length}</span></div>}
+                  <div className="pv-grp-hdr"><span className="pv-grp-dot" style={{background:area.color}}/><span className="pv-grp-name">{area.emoji} {area.name}</span><span style={{fontSize:11,color:'var(--tx3)'}}>{ap.length}</span></div>
                   {ap.map(project=>(
                     <PVProjectCard key={project.id} project={project} area={area}
                       onToggleTask={toggleTask} onEditTask={openEditTask}
                       onDeleteTask={deleteTask} onOpenSheet={setPvSheet}
                       onAddInlineTask={addInlineTask} onEditProject={openEditProject}
                       onToggleSubtask={toggleSubtask} onAddSubtask={addSubtask} onDeleteSubtask={deleteSubtask} onUpdateSubtaskDate={updateSubtaskDate} onUpdateSubtaskName={updateSubtaskName}
-                      statusFilter={projStatusFilter} showArea={!grouped}/>
+                      statusFilter={projStatusFilter} showArea={false}/>
                   ))}
                 </div>
               );
