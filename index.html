@@ -482,6 +482,9 @@ const CASA_TASKS=[
 function buildCasaTasks(){
   return CASA_TASKS.map((name,i)=>({id:`casa-${i+1}`,name,status:'pending',doDate:'',dueDate:'',note:'',subtasks:[]}));
 }
+// Palabra clave de cada tarea sembrada, para reconocer si ya existía una equivalente
+const CASA_SEED_KEYS={'casa-1':'sillon','casa-2':'cortina','casa-3':'comedor','casa-4':'tele','casa-5':'pasillo'};
+const normTxt=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 
 // ── Migraciones de datos (corren una sola vez, después de sincronizar) ──
 const MIGRATIONS=[
@@ -497,6 +500,35 @@ const MIGRATIONS=[
       :[...d.areas,{id:CASA_AREA_ID,name:'Casa',emoji:'🏠',vision:'Que la casa sea un lugar lindo para estar',color:'#0EA5E9'}];
     if(d.projects.some(p=>idEq(p.id,CASA_PROJECT_ID)))return{...d,areas};
     return{...d,areas,projects:[...d.projects,{id:CASA_PROJECT_ID,name:'Casa 2026',description:'Cositas para mejorar la casa, sin apuro',areaId:CASA_AREA_ID,year:2026,startDate:'2026-01-01',endDate:'',tasks:buildCasaTasks()}]};
+  }},
+  // Las tareas "[CASA] ..." que ya vivían en otros proyectos se mudan a Casa 2026
+  {id:'casa-2026-v2',apply:d=>{
+    const proj=d.projects.find(p=>idEq(p.id,CASA_PROJECT_ID));
+    if(!proj)return d;
+    const hoy=todayStr(),movidas=[];
+    const projects=d.projects.map(p=>{
+      if(idEq(p.id,CASA_PROJECT_ID))return p;
+      const quedan=[],van=[];
+      (p.tasks||[]).forEach(t=>{
+        if(!/\[\s*casa\s*\]/i.test(t.name||'')){quedan.push(t);return;}
+        // conserva nota, subtareas y estado; si arrastraba un vencimiento pasado,
+        // la manda a "Algún día" en vez de dejarla en rojo
+        const vencida=t.status!=='done'&&t.dueDate&&t.dueDate<hoy;
+        van.push({...t,name:(t.name||'').replace(/\[\s*casa\s*\]\s*/i,'').trim(),doDate:vencida?'':t.doDate,dueDate:vencida?'':t.dueDate});
+      });
+      if(!van.length)return p;
+      movidas.push(...van);
+      return{...p,tasks:quedan};
+    });
+    if(!movidas.length)return d;
+    // saca la tarea sembrada solo si sigue intacta y la mudada ya la cubre
+    const nombres=movidas.map(t=>normTxt(t.name));
+    const limpio=proj.tasks.filter(t=>{
+      const k=CASA_SEED_KEYS[t.id];
+      if(!k||t.status!=='pending'||(t.note||'').trim()||(t.subtasks||[]).length)return true;
+      return !nombres.some(n=>n.includes(k));
+    });
+    return{...d,projects:projects.map(p=>idEq(p.id,CASA_PROJECT_ID)?{...p,tasks:[...limpio,...movidas]}:p)};
   }},
 ];
 function applyMigrations(d){
