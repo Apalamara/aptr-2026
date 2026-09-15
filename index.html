@@ -486,6 +486,15 @@ function buildCasaTasks(){
 const CASA_SEED_KEYS={'casa-1':'sillon','casa-2':'cortina','casa-3':'comedor','casa-4':'tele','casa-5':'pasillo'};
 const normTxt=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 
+// Pendientes de Gordos: sin fecha, son cosas para explorar cuando haya rato
+const GORDOS_TASKS=[
+  'Ordenar los pins de Gordos',
+  'Gema que convierte cosas en stickers',
+  'Probar Pomelli y ver qué me crea',
+  'Ver qué tipo de fotos puedo crear con onda retro',
+];
+const GORDOS_KEYS=['pins','sticker','pomelli','retro'];
+
 // ── Migraciones de datos (corren una sola vez, después de sincronizar) ──
 const MIGRATIONS=[
   {id:'fin-openpay-v1',apply:d=>{
@@ -529,6 +538,24 @@ const MIGRATIONS=[
       return !nombres.some(n=>n.includes(k));
     });
     return{...d,projects:projects.map(p=>idEq(p.id,CASA_PROJECT_ID)?{...p,tasks:[...limpio,...movidas]}:p)};
+  }},
+  // Gordos vive en Emprendimiento. Busca proyecto y área por nombre porque los
+  // ids reales no viven en el repo; solo crea lo que falte.
+  {id:'gordos-v1',apply:d=>{
+    let areas=d.areas,projects=d.projects;
+    let proj=projects.find(p=>normTxt(p.name).includes('gordos'));
+    if(!proj){
+      let area=areas.find(a=>normTxt(a.name).includes('emprendimiento'));
+      if(!area){area={id:'area-emprendimiento',name:'Emprendimiento',emoji:'🚀',vision:'Hacer crecer mis proyectos propios',color:'#F97316'};areas=[...areas,area];}
+      proj={id:'proj-gordos',name:'Gordos',description:'',areaId:area.id,year:2026,startDate:'2026-01-01',endDate:'',tasks:[]};
+      projects=[...projects,proj];
+    }
+    // no repite una tarea que ya exista en el proyecto (por id o por palabra clave)
+    const previas=proj.tasks.map(t=>normTxt(t.name));
+    const nuevas=GORDOS_TASKS.map((name,i)=>({id:`gordos-${i+1}`,name,status:'pending',doDate:'',dueDate:'',note:'',subtasks:[]}))
+      .filter((nt,i)=>!proj.tasks.some(t=>idEq(t.id,nt.id))&&!previas.some(n=>n.includes(GORDOS_KEYS[i])));
+    if(!nuevas.length)return{...d,areas,projects};
+    return{...d,areas,projects:projects.map(p=>idEq(p.id,proj.id)?{...p,tasks:[...p.tasks,...nuevas]}:p)};
   }},
 ];
 function applyMigrations(d){
