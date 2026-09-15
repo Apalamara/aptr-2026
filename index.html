@@ -241,6 +241,7 @@ const S=`
 .tc-date{font-size:11px;display:flex;align-items:center;gap:3px;}
 .tc-date.ov{color:var(--rd);font-weight:500;}
 .tc-date.ok{color:var(--tx3);}
+.tc-date.nd{color:var(--tx3);font-style:italic;}
 .tc-date.tdy{color:var(--am);font-weight:500;}
 .recur-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--ac);background:var(--acs);border-radius:4px;padding:1px 5px;}
 .note-preview{margin-top:6px;padding:6px 9px;background:var(--sf3);border:1px solid var(--bd);border-radius:6px;font-size:12px;color:var(--tx2);line-height:1.5;word-break:break-word;}
@@ -468,6 +469,20 @@ function buildOpenPayTasks(){
   return OPENPAY_TASKS.map(t=>({id:t.id,name:`${t.base} 1`,status:'pending',doDate:iso(t.doDay),dueDate:iso(t.dueDay),note:'',subtasks:[],recur:'monthly',recurMode:'onComplete',recurBase:t.base,recurIndex:1}));
 }
 
+const CASA_AREA_ID='area-casa';
+const CASA_PROJECT_ID='proj-casa-2026';
+// Pendientes de casa: sin fecha a propósito, se hacen cuando hay un rato
+const CASA_TASKS=[
+  'Limpieza del sillón',
+  'Cambiar las cortinas',
+  'Cambiar las sillas del comedor',
+  'Colgar la tele',
+  'Arreglar la luz del pasillo',
+];
+function buildCasaTasks(){
+  return CASA_TASKS.map((name,i)=>({id:`casa-${i+1}`,name,status:'pending',doDate:'',dueDate:'',note:'',subtasks:[]}));
+}
+
 // ── Migraciones de datos (corren una sola vez, después de sincronizar) ──
 const MIGRATIONS=[
   {id:'fin-openpay-v1',apply:d=>{
@@ -476,6 +491,12 @@ const MIGRATIONS=[
     const nuevas=buildOpenPayTasks().filter(nt=>!proj.tasks.some(t=>idEq(t.id,nt.id)||t.recurBase===nt.recurBase));
     if(!nuevas.length)return d;
     return{...d,projects:d.projects.map(p=>idEq(p.id,FINANZAS_PROJECT_ID)?{...p,tasks:[...p.tasks,...nuevas]}:p)};
+  }},
+  {id:'casa-2026-v1',apply:d=>{
+    const areas=d.areas.some(a=>idEq(a.id,CASA_AREA_ID))?d.areas
+      :[...d.areas,{id:CASA_AREA_ID,name:'Casa',emoji:'🏠',vision:'Que la casa sea un lugar lindo para estar',color:'#0EA5E9'}];
+    if(d.projects.some(p=>idEq(p.id,CASA_PROJECT_ID)))return{...d,areas};
+    return{...d,areas,projects:[...d.projects,{id:CASA_PROJECT_ID,name:'Casa 2026',description:'Cositas para mejorar la casa, sin apuro',areaId:CASA_AREA_ID,year:2026,startDate:'2026-01-01',endDate:'',tasks:buildCasaTasks()}]};
   }},
 ];
 function applyMigrations(d){
@@ -786,7 +807,7 @@ function TaskCard({task,onToggle,onEdit,onDelete,onNavigate,onToggleSubtask,onAd
         <div className="tc-meta">
           <span className="tc-proj" onClick={()=>onNavigate()}><span className="tc-dot" style={{backgroundColor:task.areaColor}}/>{task.projectName}</span>
           {subs.length>0&&<span className="tc-date ok"><CheckSquare size={10}/>{subsDone}/{subs.length}</span>}
-          <span className={`tc-date ${dc}`}>{ov?<AlertCircle size={10}/>:<Calendar size={10}/>}{ov?`Vencido ${formatDate(task.dueDate)}`:formatDate(task.dueDate)}</span>
+          <span className={`tc-date ${task.dueDate?dc:'nd'}`}>{ov?<AlertCircle size={10}/>:<Calendar size={10}/>}{!task.dueDate?'Sin fecha':ov?`Vencido ${formatDate(task.dueDate)}`:formatDate(task.dueDate)}</span>
         </div>
         {task.note?.trim()&&!editNote&&<NotePreview note={task.note}/>}
         {editNote&&(
@@ -1137,14 +1158,16 @@ function APTRPlanner(){
   const openTasks=useMemo(()=>{
     const pend=allTasks.filter(t=>t.status!=='done');
     const byDate=(a,b)=>new Date(a.dueDate+'T00:00:00')-new Date(b.dueDate+'T00:00:00');
-    const venc=pend.filter(t=>isOverdueTask(t,todayMidnight)).sort(byDate);
-    const resto=pend.filter(t=>!isOverdueTask(t,todayMidnight)).sort(byDate);
-    return[...venc,...resto];
+    const conFecha=pend.filter(t=>t.dueDate),sinFecha=pend.filter(t=>!t.dueDate);
+    const venc=conFecha.filter(t=>isOverdueTask(t,todayMidnight)).sort(byDate);
+    const resto=conFecha.filter(t=>!isOverdueTask(t,todayMidnight)).sort(byDate);
+    return[...venc,...resto,...sinFecha];
   },[allTasks,todayMidnight]);
 
   const displayTasks=useMemo(()=>{
     let filtered;
     if(taskFilter==='open')filtered=openTasks;
+    else if(taskFilter==='someday')filtered=allTasks.filter(t=>t.status!=='done'&&!t.dueDate);
     else if(taskFilter==='done')filtered=allTasks.filter(t=>t.status==='done');
     else filtered=allTasks;
     if(searchQuery.trim()){const q=searchQuery.toLowerCase();filtered=filtered.filter(t=>t.name.toLowerCase().includes(q)||(t.note||'').toLowerCase().includes(q)||(t.projectName||'').toLowerCase().includes(q));}
@@ -1155,6 +1178,7 @@ function APTRPlanner(){
 
   const taskCounts=useMemo(()=>({
     open:openTasks.length,
+    someday:allTasks.filter(t=>t.status!=='done'&&!t.dueDate).length,
     all:allTasks.length,
     pending:allTasks.filter(t=>t.status==='pending').length,
     done:allTasks.filter(t=>t.status==='done').length,
@@ -1230,7 +1254,7 @@ function APTRPlanner(){
       const tasks=genRecurInstances(newTask.name,newTask.doDate||today,newTask.recurEnd,newTask.recur);
       setData(prev=>({...prev,projects:prev.projects.map(p=>idEq(p.id,newTask.projectId)?{...p,tasks:[...p.tasks,...tasks.map(t=>({...t,recurMode:'allAtOnce'}))]}:p)}));
     } else {
-      setData(prev=>({...prev,projects:prev.projects.map(p=>idEq(p.id,newTask.projectId)?{...p,tasks:[...p.tasks,{id:uid(),name:newTask.name,status:'pending',doDate:newTask.doDate||today,dueDate:newTask.dueDate||newTask.doDate||today,note:newTask.note||'',subtasks:[],recur:newTask.recur,recurMode:newTask.recurMode,recurBase:newTask.name}]}:p)}));
+      setData(prev=>({...prev,projects:prev.projects.map(p=>idEq(p.id,newTask.projectId)?{...p,tasks:[...p.tasks,{id:uid(),name:newTask.name,status:'pending',doDate:newTask.doDate||'',dueDate:newTask.dueDate||newTask.doDate||'',note:newTask.note||'',subtasks:[],recur:newTask.recur,recurMode:newTask.recurMode,recurBase:newTask.name}]}:p)}));
     }
     setNewTask({name:'',doDate:'',dueDate:'',projectId:null,note:'',recur:'',recurMode:'onComplete',recurEnd:''});
     setShowNewTask(false);
@@ -1303,16 +1327,19 @@ function APTRPlanner(){
               {searchQuery&&<button className="btn-icon" onClick={()=>setSearchQuery('')} style={{padding:2}}><X size={13}/></button>}
             </div>
             <div className="filters">
-              {[{id:'open',l:'Abiertas',c:taskCounts.open},{id:'all',l:'Todas',c:taskCounts.all},{id:'done',l:'Completadas',c:taskCounts.done}].map(f=>(
+              {[{id:'open',l:'Abiertas',c:taskCounts.open},{id:'all',l:'Todas',c:taskCounts.all},{id:'done',l:'Completadas',c:taskCounts.done},{id:'someday',l:'Algún día',c:taskCounts.someday}].map(f=>(
                 <button key={f.id} className={`fp${taskFilter===f.id?' on':''}`} onClick={()=>setTaskFilter(f.id)}>{f.l} {f.c}</button>
               ))}
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:7}}>
               {displayTasks.length===0?<div className="empty"><Circle size={38} style={{margin:'0 auto 10px',opacity:.2}}/><div className="empty-title">{searchQuery?'Sin resultados':'Sin tareas'}</div></div>:displayTasks.map((t,i)=>{
-                const sep=taskFilter==='open'&&i>0&&isOverdueTask(displayTasks[i-1],todayMidnight)&&!isOverdueTask(t,todayMidnight);
+                const ant=i>0?displayTasks[i-1]:null;
+                const sep=taskFilter==='open'&&ant&&!!t.dueDate&&isOverdueTask(ant,todayMidnight)&&!isOverdueTask(t,todayMidnight);
+                const sepAlg=taskFilter==='open'&&!t.dueDate&&(i===0||!!ant.dueDate);
                 return(
                   <React.Fragment key={t.id}>
                     {sep&&<div className="task-sep"><span>Próximas</span></div>}
+                    {sepAlg&&<div className="task-sep"><span>Algún día</span></div>}
                     <TaskCard task={t} {...cardProps}/>
                   </React.Fragment>
                 );
