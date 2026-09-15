@@ -134,6 +134,7 @@ const MES_LARGO=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agost
 function nextRecurDate(date,recur){
   const d=new Date(date+'T00:00:00');
   if(recur==='daily')d.setDate(d.getDate()+1);
+  else if(recur==='every3days')d.setDate(d.getDate()+3);
   else if(recur==='weekly')d.setDate(d.getDate()+7);
   else if(recur==='biweekly')d.setDate(d.getDate()+14);
   else if(recur==='monthly')d.setMonth(d.getMonth()+1);
@@ -148,7 +149,7 @@ function genRecurInstances(name,startDate,endDate,recur){
   }
   return tasks;
 }
-const RECUR_LABELS={'':'Sin repetición',daily:'Cada día',weekly:'Cada semana',biweekly:'Cada 2 semanas',monthly:'Cada mes'};
+const RECUR_LABELS={'':'Sin repetición',daily:'Cada día',every3days:'Cada 3 días',weekly:'Cada semana',biweekly:'Cada 2 semanas',monthly:'Cada mes'};
 
 const VERSE_FALLBACK={text:'Confía en el Señor con todo tu corazón, y no te apoyes en tu propio entendimiento.',ref:'Proverbios 3:5',src:'BibleGateway NVI'};
 
@@ -1179,9 +1180,13 @@ function APTRPlanner(){
       const origTask=p.tasks.find(t=>t.id===id);
       const newStatus=origTask.status==='done'?'pending':'done';
       if(newStatus==='done'&&origTask.recur&&origTask.recurMode==='onComplete'){
-        const nextDate=nextRecurDate(origTask.dueDate,origTask.recur);
+        // si se completó tarde, avanza hasta la primera fecha que no esté vencida
+        let nextDate=nextRecurDate(origTask.dueDate,origTask.recur),steps=1;
+        const hoy=todayStr();
+        while(nextDate<hoy&&steps<500){nextDate=nextRecurDate(nextDate,origTask.recur);steps++;}
         // preserva el rango hacer→vencer de la instancia actual
-        const nextDo=origTask.doDate?nextRecurDate(origTask.doDate,origTask.recur):nextDate;
+        let nextDo=nextDate;
+        if(origTask.doDate){nextDo=origTask.doDate;for(let k=0;k<steps;k++)nextDo=nextRecurDate(nextDo,origTask.recur);}
         const idx=(origTask.recurIndex||1)+1;
         newTasks=[...newTasks,{id:uid(),name:`${origTask.recurBase||origTask.name.replace(/ \d+$/,'')} ${idx}`,status:'pending',doDate:nextDo,dueDate:nextDate,note:'',subtasks:[],recur:origTask.recur,recurMode:'onComplete',recurBase:origTask.recurBase||origTask.name,recurIndex:idx}];
       }
