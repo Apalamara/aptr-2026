@@ -132,7 +132,9 @@ const MES_ES={1:'Ene',2:'Feb',3:'Mar',4:'Abr',5:'May',6:'Jun',7:'Jul',8:'Ago',9:
 const MES_LARGO=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 function nextRecurDate(date,recur){
-  const d=new Date(date+'T00:00:00');
+  // una recurrente sin fecha (o con fecha invalida) cuenta desde hoy
+  const base=date&&!isNaN(new Date(date+'T00:00:00').getTime())?date:todayStr();
+  const d=new Date(base+'T00:00:00');
   if(recur==='daily')d.setDate(d.getDate()+1);
   else if(recur==='every3days')d.setDate(d.getDate()+3);
   else if(recur==='weekly')d.setDate(d.getDate()+7);
@@ -495,7 +497,7 @@ const GORDOS_TASKS=[
 ];
 const GORDOS_KEYS=['pins','sticker','pomelli','retro'];
 
-const EGG_TASK_NAME='Chequear cuánto dura realmente la sesión y qué pasó con la gente cursando';
+const CUENTAS_BASE='Hacer mis cuentas';
 
 // ── Migraciones de datos (corren una sola vez, después de sincronizar) ──
 const MIGRATIONS=[
@@ -559,19 +561,23 @@ const MIGRATIONS=[
     if(!nuevas.length)return{...d,areas,projects};
     return{...d,areas,projects:projects.map(p=>idEq(p.id,proj.id)?{...p,tasks:[...p.tasks,...nuevas]}:p)};
   }},
-  // Chequeo de duración de la sesión en Egg - AI power
-  {id:'egg-aipower-v1',apply:d=>{
-    let areas=d.areas,projects=d.projects;
-    let proj=projects.find(p=>normTxt(p.name).includes('power'));
-    if(!proj){
-      let area=areas.find(a=>normTxt(a.name).includes('trabajo'));
-      if(!area){area={id:'area-trabajo',name:'Trabajo',emoji:'💼',vision:'Desarrollar mis proyectos',color:'#8B5CF6'};areas=[...areas,area];}
-      proj={id:'proj-egg-aipower',name:'Egg - AI power',description:'',areaId:area.id,year:2026,startDate:'2026-01-01',endDate:'',tasks:[]};
-      projects=[...projects,proj];
-    }
-    if(proj.tasks.some(t=>idEq(t.id,'egg-sesion-1')||normTxt(t.name).includes('dura realmente la sesion')))return{...d,areas,projects};
-    const nueva={id:'egg-sesion-1',name:EGG_TASK_NAME,status:'pending',doDate:'',dueDate:'',note:'',subtasks:[]};
-    return{...d,areas,projects:projects.map(p=>idEq(p.id,proj.id)?{...p,tasks:[...p.tasks,nueva]}:p)};
+  // La tarea de Egg no iba acá: la borra si llegó a crearse, y limpia lo que
+  // haya quedado vacío detrás
+  {id:'egg-aipower-undo-v1',apply:d=>{
+    if(!d.projects.some(p=>p.tasks?.some(t=>idEq(t.id,'egg-sesion-1'))))return d;
+    let projects=d.projects.map(p=>({...p,tasks:(p.tasks||[]).filter(t=>!idEq(t.id,'egg-sesion-1'))}));
+    projects=projects.filter(p=>!(idEq(p.id,'proj-egg-aipower')&&!p.tasks.length));
+    const areas=d.areas.filter(a=>!(idEq(a.id,'area-trabajo')&&!projects.some(p=>idEq(p.areaId,a.id))));
+    return{...d,areas,projects};
+  }},
+  // Revisar las cuentas cada 3 dias: la siguiente se crea al marcar done
+  {id:'fin-cuentas-v1',apply:d=>{
+    const proj=d.projects.find(p=>idEq(p.id,FINANZAS_PROJECT_ID))||d.projects.find(p=>normTxt(p.name).includes('finanzas'));
+    if(!proj)return d;
+    if(proj.tasks.some(t=>idEq(t.recurBase,CUENTAS_BASE)||normTxt(t.name).includes('hacer mis cuentas')))return d;
+    const hoy=todayStr();
+    const nueva={id:'fin-cuentas',name:`${CUENTAS_BASE} 1`,status:'pending',doDate:hoy,dueDate:hoy,note:'',subtasks:[],recur:'every3days',recurMode:'onComplete',recurBase:CUENTAS_BASE,recurIndex:1};
+    return{...d,projects:d.projects.map(p=>idEq(p.id,proj.id)?{...p,tasks:[...p.tasks,nueva]}:p)};
   }},
 ];
 function applyMigrations(d){
