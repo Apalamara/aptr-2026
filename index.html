@@ -495,6 +495,8 @@ const GORDOS_TASKS=[
 ];
 const GORDOS_KEYS=['pins','sticker','pomelli','retro'];
 
+const EGG_TASK_NAME='Chequear cuánto dura realmente la sesión y qué pasó con la gente cursando';
+
 // ── Migraciones de datos (corren una sola vez, después de sincronizar) ──
 const MIGRATIONS=[
   {id:'fin-openpay-v1',apply:d=>{
@@ -556,6 +558,20 @@ const MIGRATIONS=[
       .filter((nt,i)=>!proj.tasks.some(t=>idEq(t.id,nt.id))&&!previas.some(n=>n.includes(GORDOS_KEYS[i])));
     if(!nuevas.length)return{...d,areas,projects};
     return{...d,areas,projects:projects.map(p=>idEq(p.id,proj.id)?{...p,tasks:[...p.tasks,...nuevas]}:p)};
+  }},
+  // Chequeo de duración de la sesión en Egg - AI power
+  {id:'egg-aipower-v1',apply:d=>{
+    let areas=d.areas,projects=d.projects;
+    let proj=projects.find(p=>normTxt(p.name).includes('power'));
+    if(!proj){
+      let area=areas.find(a=>normTxt(a.name).includes('trabajo'));
+      if(!area){area={id:'area-trabajo',name:'Trabajo',emoji:'💼',vision:'Desarrollar mis proyectos',color:'#8B5CF6'};areas=[...areas,area];}
+      proj={id:'proj-egg-aipower',name:'Egg - AI power',description:'',areaId:area.id,year:2026,startDate:'2026-01-01',endDate:'',tasks:[]};
+      projects=[...projects,proj];
+    }
+    if(proj.tasks.some(t=>idEq(t.id,'egg-sesion-1')||normTxt(t.name).includes('dura realmente la sesion')))return{...d,areas,projects};
+    const nueva={id:'egg-sesion-1',name:EGG_TASK_NAME,status:'pending',doDate:'',dueDate:'',note:'',subtasks:[]};
+    return{...d,areas,projects:projects.map(p=>idEq(p.id,proj.id)?{...p,tasks:[...p.tasks,nueva]}:p)};
   }},
 ];
 function applyMigrations(d){
