@@ -102,6 +102,13 @@ function formatDate(d){
   if(dd.getTime()===tom.getTime())return'Mañana';
   return date.toLocaleDateString('es-AR',{day:'numeric',month:'short'});
 }
+const mesKey=d=>(d||'').slice(0,7);
+// "Octubre", y con año cuando no es el actual: "Enero 2027"
+function mesLabel(d){
+  const[y,m]=(d||'').split('-');
+  const nom=MES_LARGO[+m-1]||'';
+  return +y===new Date().getFullYear()?nom:`${nom} ${y}`;
+}
 function isOverdue(due,status){
   if(status==='done'||!due)return false;
   const today=new Date();today.setHours(0,0,0,0);
@@ -1456,11 +1463,14 @@ function APTRPlanner(){
             <div style={{display:'flex',flexDirection:'column',gap:7}}>
               {displayTasks.length===0?<div className="empty"><Circle size={38} style={{margin:'0 auto 10px',opacity:.2}}/><div className="empty-title">{searchQuery?'Sin resultados':'Sin tareas'}</div></div>:displayTasks.map((t,i)=>{
                 const ant=i>0?displayTasks[i-1]:null;
-                const sep=taskFilter==='open'&&ant&&!!t.dueDate&&isOverdueTask(ant,todayMidnight)&&!isOverdueTask(t,todayMidnight);
+                // dentro de las que no estan vencidas, corta cada vez que cambia el mes
+                const prox=taskFilter==='open'&&!!t.dueDate&&!isOverdueTask(t,todayMidnight);
+                const antProx=!!ant&&!!ant.dueDate&&!isOverdueTask(ant,todayMidnight);
+                const sepMes=prox&&(!antProx||mesKey(ant.dueDate)!==mesKey(t.dueDate));
                 const sepAlg=taskFilter==='open'&&!t.dueDate&&(i===0||!!ant.dueDate);
                 return(
                   <React.Fragment key={t.id}>
-                    {sep&&<div className="task-sep"><span>Próximas</span></div>}
+                    {sepMes&&<div className="task-sep"><span>{mesLabel(t.dueDate)}</span></div>}
                     {sepAlg&&<div className="task-sep"><span>Algún día</span></div>}
                     <TaskCard task={t} {...cardProps}/>
                   </React.Fragment>
