@@ -591,6 +591,12 @@ const MIGRATIONS=[
     const areas=d.areas.filter(a=>!(idEq(a.id,'area-emprendimiento')&&!projects.some(p=>idEq(p.areaId,a.id))));
     return{...d,areas,projects};
   }},
+  // Baja del proyecto de marzo "Mujeres en la Biblia", con todas sus tareas
+  {id:'del-mujeres-biblia-v1',apply:d=>{
+    const esEse=p=>{const n=normNombre(p.name);return n.includes('mujeres')&&n.includes('biblia');};
+    if(!d.projects.some(esEse))return d;
+    return{...d,projects:d.projects.filter(p=>!esEse(p))};
+  }},
   // Revisar las cuentas cada 3 dias: la siguiente se crea al marcar done
   {id:'fin-cuentas-v1',apply:d=>{
     const proj=d.projects.find(p=>idEq(p.id,FINANZAS_PROJECT_ID))||d.projects.find(p=>normTxt(p.name).includes('finanzas'));
