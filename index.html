@@ -448,6 +448,7 @@ const S=`
 .qd-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
 .qd-btn{background:var(--sf3);border:1px solid var(--bd);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:500;color:var(--tx2);cursor:pointer;transition:all .15s;font-family:inherit;}
 .qd-btn:hover{border-color:var(--ac);color:var(--ac);}
+.qd-btn.qd-nd{font-style:italic;}
 @keyframes check-pop{0%{transform:scale(1);}40%{transform:scale(1.3);}100%{transform:scale(1);}}
 @keyframes check-ring{0%{box-shadow:0 0 0 0 rgba(15,138,74,.35);}100%{box-shadow:0 0 0 12px rgba(15,138,74,0);}}
 .chk-anim{animation:check-pop .3s ease;}
@@ -1786,6 +1787,7 @@ function APTRPlanner(){
             <button type="button" className="qd-btn" onClick={()=>setNewTask({...newTask,doDate:tomorrowStr(),dueDate:tomorrowStr()})}>Mañana</button>
             <button type="button" className="qd-btn" onClick={()=>setNewTask({...newTask,doDate:nextMondayStr(),dueDate:nextMondayStr()})}>Lunes</button>
             <button type="button" className="qd-btn" onClick={()=>setNewTask({...newTask,doDate:nextMondayStr(),dueDate:nextFridayStr()})}>Próx. semana</button>
+            <button type="button" className="qd-btn qd-nd" onClick={()=>setNewTask({...newTask,doDate:'',dueDate:''})}>Algún día</button>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
             <div><label className="flabel">Inicio</label><input type="date" className="finput" value={newTask.doDate} onChange={e=>setNewTask({...newTask,doDate:e.target.value})}/></div>
@@ -1844,6 +1846,7 @@ function APTRPlanner(){
             <button type="button" className="qd-btn" onClick={()=>setEditTaskForm({...editTaskForm,doDate:tomorrowStr(),dueDate:tomorrowStr()})}>Mañana</button>
             <button type="button" className="qd-btn" onClick={()=>setEditTaskForm({...editTaskForm,doDate:nextMondayStr(),dueDate:nextMondayStr()})}>Lunes</button>
             <button type="button" className="qd-btn" onClick={()=>setEditTaskForm({...editTaskForm,doDate:nextMondayStr(),dueDate:nextFridayStr()})}>Próx. semana</button>
+            <button type="button" className="qd-btn qd-nd" onClick={()=>setEditTaskForm({...editTaskForm,doDate:'',dueDate:''})}>Algún día</button>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
             <div><label className="flabel">Inicio</label><input type="date" className="finput" value={editTaskForm.doDate} onChange={e=>setEditTaskForm({...editTaskForm,doDate:e.target.value})}/></div>
