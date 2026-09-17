@@ -496,6 +496,7 @@ const GORDOS_TASKS=[
   'Ver qué tipo de fotos puedo crear con onda retro',
 ];
 const GORDOS_KEYS=['pins','sticker','pomelli','retro'];
+const normNombre=t=>normTxt(t).replace(/['‘’´`]/g,'');
 
 const CUENTAS_BASE='Hacer mis cuentas';
 
@@ -547,7 +548,7 @@ const MIGRATIONS=[
   // ids reales no viven en el repo; solo crea lo que falte.
   {id:'gordos-v1',apply:d=>{
     let areas=d.areas,projects=d.projects;
-    let proj=projects.find(p=>normTxt(p.name).includes('gordos'));
+    let proj=projects.find(p=>normNombre(p.name).includes('gordos'));
     if(!proj){
       let area=areas.find(a=>normTxt(a.name).includes('emprendimiento'));
       if(!area){area={id:'area-emprendimiento',name:'Emprendimiento',emoji:'🚀',vision:'Hacer crecer mis proyectos propios',color:'#F97316'};areas=[...areas,area];}
@@ -568,6 +569,26 @@ const MIGRATIONS=[
     let projects=d.projects.map(p=>({...p,tasks:(p.tasks||[]).filter(t=>!idEq(t.id,'egg-sesion-1'))}));
     projects=projects.filter(p=>!(idEq(p.id,'proj-egg-aipower')&&!p.tasks.length));
     const areas=d.areas.filter(a=>!(idEq(a.id,'area-trabajo')&&!projects.some(p=>idEq(p.areaId,a.id))));
+    return{...d,areas,projects};
+  }},
+  // "Gordo's" con apostrofe no matcheaba con "gordos": junta el proyecto que
+  // quedó duplicado con el real y borra el sobrante
+  {id:'gordos-merge-v1',apply:d=>{
+    const mio=d.projects.find(p=>idEq(p.id,'proj-gordos'));
+    if(!mio)return d;
+    const destino=d.projects.find(p=>!idEq(p.id,'proj-gordos')&&normNombre(p.name).includes('gordo'));
+    if(!destino)return d;
+    const previas=destino.tasks.map(t=>normTxt(t.name));
+    const keyDe=t=>{const m=/^gordos-(\d+)$/.exec(String(t.id));return m?GORDOS_KEYS[+m[1]-1]:null;};
+    // descarta la sembrada solo si sigue intacta y el destino ya la cubre
+    const mover=mio.tasks.filter(t=>{
+      const k=keyDe(t);
+      const intacta=t.status==='pending'&&!(t.note||'').trim()&&!(t.subtasks||[]).length;
+      return!(k&&intacta&&previas.some(n=>n.includes(k)));
+    });
+    const projects=d.projects.filter(p=>!idEq(p.id,'proj-gordos'))
+      .map(p=>idEq(p.id,destino.id)?{...p,tasks:[...p.tasks,...mover]}:p);
+    const areas=d.areas.filter(a=>!(idEq(a.id,'area-emprendimiento')&&!projects.some(p=>idEq(p.areaId,a.id))));
     return{...d,areas,projects};
   }},
   // Revisar las cuentas cada 3 dias: la siguiente se crea al marcar done
