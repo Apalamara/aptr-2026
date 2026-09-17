@@ -597,6 +597,20 @@ const MIGRATIONS=[
     if(!d.projects.some(esEse))return d;
     return{...d,projects:d.projects.filter(p=>!esEse(p))};
   }},
+  // Memé: registro de veterinario, peluquería y demás. Vive en el área Casa.
+  {id:'meme-v1',apply:d=>{
+    if(d.projects.some(p=>idEq(p.id,'proj-meme')||normNombre(p.name).includes('meme')))return d;
+    let areas=d.areas;
+    let area=areas.find(a=>idEq(a.id,CASA_AREA_ID))||areas.find(a=>normNombre(a.name).includes('casa'));
+    if(!area){area={id:CASA_AREA_ID,name:'Casa',emoji:'🏠',vision:'Que la casa sea un lugar lindo para estar',color:'#0EA5E9'};areas=[...areas,area];}
+    const hoy=todayStr();
+    // la app guarda fecha pero no hora: el horario del turno va en la nota
+    const tasks=[
+      {id:'meme-1',name:'Sacar turno a la peluquería',status:'done',doDate:hoy,dueDate:hoy,note:'',subtasks:[]},
+      {id:'meme-2',name:'Llevar a Memé a la peluquería',status:'pending',doDate:'2026-09-18',dueDate:'2026-09-18',note:'Turno 12:00 hs',subtasks:[]},
+    ];
+    return{...d,areas,projects:[...d.projects,{id:'proj-meme',name:'Memé',description:'Veterinario, peluquería y todo lo de Memé',areaId:area.id,year:2026,startDate:hoy,endDate:'',tasks}]};
+  }},
   // Revisar las cuentas cada 3 dias: la siguiente se crea al marcar done
   {id:'fin-cuentas-v1',apply:d=>{
     const proj=d.projects.find(p=>idEq(p.id,FINANZAS_PROJECT_ID))||d.projects.find(p=>normTxt(p.name).includes('finanzas'));
