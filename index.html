@@ -103,6 +103,8 @@ function formatDate(d){
   return date.toLocaleDateString('es-AR',{day:'numeric',month:'short'});
 }
 const mesKey=d=>(d||'').slice(0,7);
+// la ventana para hacerla ya arranco: urge aunque venza mas adelante
+const enVentana=(t,hoy)=>!!t.doDate&&t.doDate<=hoy;
 // "Octubre", y con año cuando no es el actual: "Enero 2027"
 function mesLabel(d){
   const[y,m]=(d||'').split('-');
@@ -617,6 +619,18 @@ const MIGRATIONS=[
       {id:'meme-2',name:'Llevar a Memé a la peluquería',status:'pending',doDate:'2026-09-18',dueDate:'2026-09-18',note:'Turno 12:00 hs',subtasks:[]},
     ];
     return{...d,areas,projects:[...d.projects,{id:'proj-meme',name:'Memé',description:'Veterinario, peluquería y todo lo de Memé',areaId:area.id,year:2026,startDate:hoy,endDate:'',tasks}]};
+  }},
+  // Crear facturas incluye siempre la de Open Pay: queda como subtarea
+  {id:'facturas-sub-openpay-v1',apply:d=>{
+    let toco=false;
+    const projects=d.projects.map(p=>({...p,tasks:(p.tasks||[]).map(t=>{
+      if(t.status==='done'||!normTxt(t.name).includes('crear facturas'))return t;
+      const subs=t.subtasks||[];
+      if(subs.some(x=>normTxt(x.name).includes('open pay')))return t;
+      toco=true;
+      return{...t,subtasks:[...subs,{id:`sub-op-${t.id}`,name:'Hacer la de Open Pay',status:'pending',dueDate:''}]};
+    })}));
+    return toco?{...d,projects}:d;
   }},
   // Revisar las cuentas cada 3 dias: la siguiente se crea al marcar done
   {id:'fin-cuentas-v1',apply:d=>{
@@ -1284,13 +1298,18 @@ function APTRPlanner(){
   // abiertas = todo lo pendiente: primero lo vencido, despues lo que viene.
   // dentro de cada grupo, de mas vieja a mas nueva.
   const todayMidnight=useMemo(()=>{const d=new Date();d.setHours(0,0,0,0);return d;},[]);
+  const hoyStr=useMemo(()=>todayStr(),[]);
   const openTasks=useMemo(()=>{
     const pend=allTasks.filter(t=>t.status!=='done');
     const byDate=(a,b)=>new Date(a.dueDate+'T00:00:00')-new Date(b.dueDate+'T00:00:00');
     const conFecha=pend.filter(t=>t.dueDate),sinFecha=pend.filter(t=>!t.dueDate);
     const venc=conFecha.filter(t=>isOverdueTask(t,todayMidnight)).sort(byDate);
-    const resto=conFecha.filter(t=>!isOverdueTask(t,todayMidnight)).sort(byDate);
-    return[...venc,...resto,...sinFecha];
+    const resto=conFecha.filter(t=>!isOverdueTask(t,todayMidnight));
+    // ya se puede (y conviene) hacer: la fecha de hacer ya paso pero todavia no vence
+    const hoy=todayStr();
+    const enCurso=resto.filter(t=>enVentana(t,hoy)).sort(byDate);
+    const futuras=resto.filter(t=>!enVentana(t,hoy)).sort(byDate);
+    return[...venc,...enCurso,...futuras,...sinFecha];
   },[allTasks,todayMidnight]);
 
   const displayTasks=useMemo(()=>{
@@ -1466,10 +1485,14 @@ function APTRPlanner(){
                 // dentro de las que no estan vencidas, corta cada vez que cambia el mes
                 const prox=taskFilter==='open'&&!!t.dueDate&&!isOverdueTask(t,todayMidnight);
                 const antProx=!!ant&&!!ant.dueDate&&!isOverdueTask(ant,todayMidnight);
-                const sepMes=prox&&(!antProx||mesKey(ant.dueDate)!==mesKey(t.dueDate));
+                const curso=prox&&enVentana(t,hoyStr);
+                const antCurso=antProx&&enVentana(ant,hoyStr);
+                const sepAhora=curso&&!antCurso;
+                const sepMes=prox&&!curso&&(!antProx||antCurso||mesKey(ant.dueDate)!==mesKey(t.dueDate));
                 const sepAlg=taskFilter==='open'&&!t.dueDate&&(i===0||!!ant.dueDate);
                 return(
                   <React.Fragment key={t.id}>
+                    {sepAhora&&<div className="task-sep"><span>Para hacer ahora</span></div>}
                     {sepMes&&<div className="task-sep"><span>{mesLabel(t.dueDate)}</span></div>}
                     {sepAlg&&<div className="task-sep"><span>Algún día</span></div>}
                     <TaskCard task={t} {...cardProps}/>
