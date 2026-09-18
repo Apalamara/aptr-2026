@@ -633,6 +633,22 @@ const MIGRATIONS=[
     })}));
     return toco?{...d,projects}:d;
   }},
+  // Pasaje a Brasil: la ventana arranca hoy para que caiga en "Para hacer ahora"
+  {id:'brasil-pasaje-v1',apply:d=>{
+    if(d.projects.some(p=>(p.tasks||[]).some(t=>idEq(t.id,'brasil-pasaje')||normTxt(t.name).includes('pasaje')&&normTxt(t.name).includes('brasil'))))return d;
+    let areas=d.areas,projects=d.projects;
+    let proj=projects.find(p=>normNombre(p.name).includes('brain'));
+    if(!proj){
+      let area=areas.find(a=>normNombre(a.name).includes('desarrollo'))||areas[0];
+      if(!area){area={id:'area-personal',name:'Desarrollo Personal',emoji:'🌱',vision:'',color:'#EC4899'};areas=[...areas,area];}
+      proj={id:'proj-braindump',name:'BrainDump 2026',description:'',areaId:area.id,year:2026,startDate:'2026-01-01',endDate:'',tasks:[]};
+      projects=[...projects,proj];
+    }
+    const hoy=todayStr();
+    const fin=`${hoy.slice(0,4)}-${hoy.slice(5,7)}-${new Date(+hoy.slice(0,4),+hoy.slice(5,7),0).getDate()}`;
+    const nueva={id:'brasil-pasaje',name:'Sacar pasaje a Brasil',status:'pending',doDate:hoy,dueDate:fin,note:'Viaje en enero 2027 · sacarlo cuanto antes',subtasks:[]};
+    return{...d,areas,projects:projects.map(p=>idEq(p.id,proj.id)?{...p,tasks:[...p.tasks,nueva]}:p)};
+  }},
   // Revisar las cuentas cada 3 dias: la siguiente se crea al marcar done
   {id:'fin-cuentas-v1',apply:d=>{
     const proj=d.projects.find(p=>idEq(p.id,FINANZAS_PROJECT_ID))||d.projects.find(p=>normTxt(p.name).includes('finanzas'));
